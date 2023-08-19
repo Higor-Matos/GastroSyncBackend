@@ -3,7 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GastroSyncBackend", "GastroSyncBackend\GastroSyncBackend.csproj", "{F52E04B6-BA5E-40B2-A4B8-21A161D8CB63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Domain", "GastroSyncBackend.Domain\GastroSyncBackend.Domain.csproj", "{279B15FB-AC7A-4D29-8CA1-2DABC0B4446F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Common", "GastroSyncBackend.Common\GastroSyncBackend.Common.csproj", "{BAE469AE-066B-4C8E-97C6-EEF95D7293FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Infrastructure", "GastroSyncBackend.Infrastructure\GastroSyncBackend.Infrastructure.csproj", "{E25AFEEC-F8C6-4926-AEFE-6B7C1A4D40EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Repository", "GastroSyncBackend.Repository\GastroSyncBackend.Repository.csproj", "{525C0531-7D0E-403E-82EB-3B76E36DD484}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Services", "GastroSyncBackend.Services\GastroSyncBackend.Services.csproj", "{8B7EC3AA-3291-4CDE-997A-D910C62563FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Presentation", "GastroSyncBackend.Presentation\GastroSyncBackend.Presentation.csproj", "{365ABAEE-4C97-41D1-BC52-0B37F43EBD03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1-GastroSyncBackend.Presentation", "1-GastroSyncBackend.Presentation", "{0CF5E6F4-1387-42E8-BA1A-2BC715F901D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2-GastroSyncBackend.Services", "2-GastroSyncBackend.Services", "{2DD37460-4CFF-47BC-A910-D6AB143EC9B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-GastroSyncBackend.Repository", "3-GastroSyncBackend.Repository", "{66E84FB4-5F17-460A-A322-0ECA2B281C6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-GastroSyncBackend.Infrastructure", "4-GastroSyncBackend.Infrastructure", "{3BA719E1-53C4-4406-A2F0-779423404FC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5-GastroSyncBackend.Domain", "5-GastroSyncBackend.Domain", "{F5F23AB6-D0A3-49A5-8424-35B825FAC6EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GastroSyncBackend.Common", "GastroSyncBackend.Common", "{1837D381-2C58-4341-B294-2B51BEA28B50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GastroSyncBackend.Teste", "GastroSyncBackend.Teste\GastroSyncBackend.Teste.csproj", "{78FC2D4A-F975-4126-B4A4-8316488F8748}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8626200F-6ED6-463D-BA01-A0A1C868D591}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +37,49 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F52E04B6-BA5E-40B2-A4B8-21A161D8CB63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F52E04B6-BA5E-40B2-A4B8-21A161D8CB63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F52E04B6-BA5E-40B2-A4B8-21A161D8CB63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F52E04B6-BA5E-40B2-A4B8-21A161D8CB63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{279B15FB-AC7A-4D29-8CA1-2DABC0B4446F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{279B15FB-AC7A-4D29-8CA1-2DABC0B4446F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{279B15FB-AC7A-4D29-8CA1-2DABC0B4446F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{279B15FB-AC7A-4D29-8CA1-2DABC0B4446F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAE469AE-066B-4C8E-97C6-EEF95D7293FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAE469AE-066B-4C8E-97C6-EEF95D7293FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAE469AE-066B-4C8E-97C6-EEF95D7293FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAE469AE-066B-4C8E-97C6-EEF95D7293FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E25AFEEC-F8C6-4926-AEFE-6B7C1A4D40EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E25AFEEC-F8C6-4926-AEFE-6B7C1A4D40EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E25AFEEC-F8C6-4926-AEFE-6B7C1A4D40EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E25AFEEC-F8C6-4926-AEFE-6B7C1A4D40EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{525C0531-7D0E-403E-82EB-3B76E36DD484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{525C0531-7D0E-403E-82EB-3B76E36DD484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{525C0531-7D0E-403E-82EB-3B76E36DD484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{525C0531-7D0E-403E-82EB-3B76E36DD484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B7EC3AA-3291-4CDE-997A-D910C62563FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B7EC3AA-3291-4CDE-997A-D910C62563FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B7EC3AA-3291-4CDE-997A-D910C62563FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B7EC3AA-3291-4CDE-997A-D910C62563FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365ABAEE-4C97-41D1-BC52-0B37F43EBD03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365ABAEE-4C97-41D1-BC52-0B37F43EBD03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365ABAEE-4C97-41D1-BC52-0B37F43EBD03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365ABAEE-4C97-41D1-BC52-0B37F43EBD03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78FC2D4A-F975-4126-B4A4-8316488F8748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FC2D4A-F975-4126-B4A4-8316488F8748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FC2D4A-F975-4126-B4A4-8316488F8748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FC2D4A-F975-4126-B4A4-8316488F8748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8626200F-6ED6-463D-BA01-A0A1C868D591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8626200F-6ED6-463D-BA01-A0A1C868D591}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8626200F-6ED6-463D-BA01-A0A1C868D591}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8626200F-6ED6-463D-BA01-A0A1C868D591}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{279B15FB-AC7A-4D29-8CA1-2DABC0B4446F} = {F5F23AB6-D0A3-49A5-8424-35B825FAC6EE}
+		{BAE469AE-066B-4C8E-97C6-EEF95D7293FE} = {1837D381-2C58-4341-B294-2B51BEA28B50}
+		{E25AFEEC-F8C6-4926-AEFE-6B7C1A4D40EC} = {3BA719E1-53C4-4406-A2F0-779423404FC2}
+		{525C0531-7D0E-403E-82EB-3B76E36DD484} = {66E84FB4-5F17-460A-A322-0ECA2B281C6B}
+		{8B7EC3AA-3291-4CDE-997A-D910C62563FE} = {2DD37460-4CFF-47BC-A910-D6AB143EC9B5}
+		{365ABAEE-4C97-41D1-BC52-0B37F43EBD03} = {0CF5E6F4-1387-42E8-BA1A-2BC715F901D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D07C5309-7CC9-4908-8BFA-03A769844186}

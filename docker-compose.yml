@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  gastrosyncbackend.presentation:
+    image: ${DOCKER_REGISTRY-}gastrosyncbackendpresentation
+    build:
+      context: .
+      dockerfile: GastroSyncBackend.Presentation/Dockerfile
