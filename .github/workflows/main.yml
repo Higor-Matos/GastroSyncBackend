@@ -44,5 +44,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"Higor-Matos_GastroSyncBackend" /o:"higor-matos" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet run --project GastroSyncBackend.Presentation/GastroSyncBackend.sln
+          dotnet build GastroSyncBackend.Presentation/GastroSyncBackend.sln
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
