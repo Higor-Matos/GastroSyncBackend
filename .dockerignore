@@ -1,8 +1,11 @@
+# Arquivos e diretórios relacionados ao sistema de controle de versão
+**/.git
+**/.gitignore
+
+# Arquivos e diretórios de configuração de IDE e ferramentas
 **/.classpath
 **/.dockerignore
 **/.env
-**/.git
-**/.gitignore
 **/.project
 **/.settings
 **/.toolstarget
@@ -11,15 +14,21 @@
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
+
+# Arquivos e diretórios de compilação e dependências
 **/azds.yaml
 **/bin
-**/charts
-**/docker-compose*
-**/Dockerfile*
+**/obj
 **/node_modules
 **/npm-debug.log
-**/obj
+
+# Arquivos e diretórios relacionados ao Docker e Kubernetes
+**/docker-compose*
+**/Dockerfile*
+**/charts
 **/secrets.dev.yaml
 **/values.dev.yaml
+
+# Arquivos de licença e documentação
 LICENSE
 README.md
