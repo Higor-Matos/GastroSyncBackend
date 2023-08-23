@@ -1,10 +1,10 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
+# Base image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+# SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["GastroSyncBackend.Presentation/GastroSyncBackend.Presentation.csproj", "GastroSyncBackend.Presentation/"]
@@ -16,10 +16,17 @@ COPY . .
 WORKDIR "/src/GastroSyncBackend.Presentation"
 RUN dotnet build "GastroSyncBackend.Presentation.csproj" -c Release -o /app/build
 
+# Publish the app
 FROM build AS publish
 RUN dotnet publish "GastroSyncBackend.Presentation.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
+# Final stage to setup the app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Create non-root user
+RUN useradd -u 1000 appuser
+USER appuser
+
 ENTRYPOINT ["dotnet", "GastroSyncBackend.Presentation.dll"]
