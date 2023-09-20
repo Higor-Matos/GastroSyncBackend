@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GastroSyncBackend.Domain\GastroSyncBackend.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
