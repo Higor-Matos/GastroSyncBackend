@@ -1,20 +1,33 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using GastroSyncBackend.Common;
 using NLog.Web;
 
+var logger = NLog.LogManager.GetCurrentClassLogger();
+
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Host.UseNLog();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
 
-var logger = NLog.LogManager.GetCurrentClassLogger();
+var containerBuilder = new ContainerBuilder();
+containerBuilder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+    .Where(t => t.GetCustomAttributes(typeof(AutoDIAttribute), false).Any())
+    .AsImplementedInterfaces();
+containerBuilder.Populate(builder.Services);
+var container = containerBuilder.Build();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Services.AddAutofac();
+
+var app = builder.Build();
 
 try
 {
-    logger.Info("Aplicação Iniciando...");
+    logger.Info("Configurando e construindo a aplicação...");
 
     if (app.Environment.IsDevelopment())
     {
@@ -27,15 +40,15 @@ try
     app.UseAuthorization();
     app.MapControllers();
 
-    logger.Info("Aplicação Configurada. Iniciando...");
+    logger.Info("Aplicação iniciada e pronta para receber requisições...");
 
     app.Run();
 
-    logger.Info("Aplicação Iniciada.");
+    logger.Info("Aplicação finalizada com sucesso.");
 }
 catch (Exception ex)
 {
-    logger.Error(ex, "Aplicação encerrada devido a uma exceção.");
+    logger.Fatal(ex, "Exceção crítica encontrada. Aplicação encerrada.");
     throw;
 }
 finally

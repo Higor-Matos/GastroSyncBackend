@@ -1,2 +1,2 @@
-2023-09-20 19:53:26.2549 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
-2023-09-20 19:53:26.2665 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allconsole
+2023-09-20 21:59:53.2387 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2023-09-20 21:59:53.2609 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allconsole
