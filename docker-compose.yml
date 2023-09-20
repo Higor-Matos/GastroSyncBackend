@@ -3,11 +3,21 @@ version: '3.8'
 services:
   gastrosyncbackend.presentation:
     image: ${DOCKER_REGISTRY-}gastrosyncbackendpresentation
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
     build:
       context: .
       dockerfile: GastroSyncBackend.Presentation/Dockerfile
+    ports:
+        - "8080:80"
+        - "8443:443"
     networks:
-      - elk
+      - gastrosync_elk_network
+    depends_on:
+      elasticsearch:
+          condition: service_healthy
+      kibana:
+          condition: service_healthy
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
@@ -21,7 +31,7 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     networks:
-      - elk
+      - gastrosync_elk_network
     healthcheck:
       test: ["CMD-SHELL", "curl -sSL http://localhost:9200/_cluster/health?pretty || exit 1"]
       interval: 30s
@@ -41,7 +51,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk
+      - gastrosync_elk_network
     healthcheck:
       test: ["CMD-SHELL", "curl -sSL http://localhost:5601 || exit 1"]
       interval: 30s
@@ -55,4 +65,4 @@ volumes:
     driver: local
 
 networks:
-  elk:
+  gastrosync_elk_network:
