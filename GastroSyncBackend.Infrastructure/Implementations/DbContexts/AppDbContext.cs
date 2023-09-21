@@ -37,9 +37,18 @@ public class AppDbContext : DbContext, IAppDbContext
     private static void ConfigureProdutoEntity(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Produto>()
+            .HasKey(p => p.Id);
+
+        modelBuilder.Entity<Produto>()
+            .Property(p => p.Id)
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<Produto>()
             .Property(p => p.Preco)
             .HasColumnType("decimal(18,2)");
     }
+
+
 
     public void EnsureDatabaseCreated()
     {
