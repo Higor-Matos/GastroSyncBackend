@@ -7,7 +7,7 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts;
 
 public class AppDbContext : DbContext, IAppDbContext
 {
-    public DbSet<Produto> Produtos { get; set; }
+    public DbSet<Produto>? Produtos { get; set; }
     private readonly ILogger<AppDbContext> _logger;
 
     public AppDbContext(DbContextOptions<AppDbContext> options, ILogger<AppDbContext> logger) : base(options)
@@ -22,15 +22,9 @@ public class AppDbContext : DbContext, IAppDbContext
 
         try
         {
-            if (Produtos != null)
-            {
-                modelBuilder.Entity<Produto>()
-                    .Property(p => p.Preco)
-                    .HasColumnType("decimal(18,2)");
-            }
+            ConfigureProdutoEntity(modelBuilder);
 
-            // Chamando o método SeedData para semear os dados
-            SeedData(modelBuilder);
+            SeedData.Seed(modelBuilder);
 
             _logger.LogInformation("AppDbContext: Configuração do modelo de entidade concluída com sucesso");
         }
@@ -40,24 +34,15 @@ public class AppDbContext : DbContext, IAppDbContext
         }
     }
 
-    private void SeedData(ModelBuilder modelBuilder)
+    private static void ConfigureProdutoEntity(ModelBuilder modelBuilder)
     {
-        _logger.LogInformation("Semeadura inicial de dados...");
-
-        modelBuilder.Entity<Produto>().HasData(
-            new Produto { Id = 1, Nome = "Pizza", Preco = 50.5M, Categoria = "Comida" },
-            new Produto { Id = 2, Nome = "Sushi", Preco = 70, Categoria = "Comida" },
-            new Produto { Id = 3, Nome = "Macarrão", Preco = 30.5M, Categoria = "Comida" },
-            new Produto { Id = 4, Nome = "Hamburger", Preco = 35.9M, Categoria = "Comida" },
-            new Produto { Id = 5, Nome = "Suco", Preco = 4.5M, Categoria = "Bebida" },
-            new Produto { Id = 6, Nome = "Água", Preco = 3.5M, Categoria = "Bebida" },
-            new Produto { Id = 7, Nome = "Refrigerante", Preco = 10.9M, Categoria = "Bebida" },
-            new Produto { Id = 8, Nome = "Cerveja", Preco = 15M, Categoria = "Bebida" }
-        );
+        modelBuilder.Entity<Produto>()
+            .Property(p => p.Preco)
+            .HasColumnType("decimal(18,2)");
     }
 
     public void EnsureDatabaseCreated()
     {
-        this.Database.EnsureCreated();
+        Database.EnsureCreated();
     }
 }
