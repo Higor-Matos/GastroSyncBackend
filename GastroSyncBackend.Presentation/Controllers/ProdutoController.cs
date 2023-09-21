@@ -52,17 +52,5 @@ public class ProdutoController : ControllerBase
             return BadRequest("Ocorreu um erro ao buscar os produtos");
         }
     }
-
-
-
-    [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
-    {
-        var produto = _context.Produtos!.FirstOrDefault(p => p.Id == id);
-        if (produto == null)
-        {
-            return NotFound();
-        }
-        return Ok(produto);
-    }
+    
 }
