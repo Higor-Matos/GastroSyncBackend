@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   gastrosyncbackend.presentation:
+    container_name: gastrosyncbackend-presentation-gastrosyncbackend
     image: ${DOCKER_REGISTRY-}gastrosyncbackendpresentation
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
@@ -18,8 +19,11 @@ services:
           condition: service_healthy
       kibana:
           condition: service_healthy
-
+      sqlserver:
+        condition: service_healthy
+        
   elasticsearch:
+    container_name: elasticsearch-gastrosyncbackend
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
     environment:
       - discovery.type=single-node
@@ -39,6 +43,7 @@ services:
       retries: 3
 
   kibana:
+    container_name: kibana-gastrosyncbackend
     image: docker.elastic.co/kibana/kibana:7.15.0
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
@@ -58,10 +63,28 @@ services:
       timeout: 30s
       retries: 3
 
+  sqlserver:
+    container_name: sqlserver-gastrosyncbackend
+    image: mcr.microsoft.com/mssql/server:latest
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MyPass@word
+      - MSSQL_PID=Express
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "MyPass@word", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 volumes:
   esdata:
     driver: local
   kbdata:
+    driver: local
+  sqldata:
     driver: local
 
 networks:

@@ -11,4 +11,9 @@
     <ProjectReference Include="..\GastroSyncBackend.Repository\GastroSyncBackend.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Implementations\" />
+  </ItemGroup>
+
 </Project>
