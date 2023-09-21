@@ -10,4 +10,10 @@
     <ProjectReference Include="..\GastroSyncBackend.Common\GastroSyncBackend.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="Implementations\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>
