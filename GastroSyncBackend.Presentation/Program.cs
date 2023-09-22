@@ -17,6 +17,14 @@ try
 {
     logger.Info("Configurando e construindo a aplicação...");
 
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+    dbContext.EnsureDatabaseCreated();
+    dbContext.DatabaseMigrate();  // Isso agora deve funcionar
+
+
+    logger.Info("Banco de dados verificado com sucesso.");
+
     InitializeDatabase(app);
 
     if (app.Environment.IsDevelopment())

@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
+﻿using GastroSyncBackend.Domain.Entities;
+using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts;
@@ -17,5 +18,13 @@ public class AppDbContext : AppDbContextBase, IAppDbContext
     {
         this.Database.EnsureCreated();
     }
+
+    public void DatabaseMigrate()
+    {
+        this.Database.Migrate();
+    }
+
+    public DbSet<MesaEntity> Mesas { get; set; }
+
 }
 

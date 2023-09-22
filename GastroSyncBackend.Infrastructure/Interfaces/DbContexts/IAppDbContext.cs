@@ -10,5 +10,8 @@ public interface IAppDbContext
     DbSet<ProdutoEntity>? Produtos { get; set; }
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
     void EnsureDatabaseCreated();
+    void DatabaseMigrate();
+
+    public DbSet<MesaEntity> Mesas { get; set; }
 
 }

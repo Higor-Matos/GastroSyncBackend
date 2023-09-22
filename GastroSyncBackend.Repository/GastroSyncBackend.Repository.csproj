@@ -7,16 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Implementations\**" />
-    <Compile Remove="Interfaces\**" />
-    <EmbeddedResource Remove="Implementations\**" />
-    <EmbeddedResource Remove="Interfaces\**" />
-    <None Remove="Implementations\**" />
-    <None Remove="Interfaces\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GastroSyncBackend.Domain\GastroSyncBackend.Domain.csproj" />
+    <ProjectReference Include="..\GastroSyncBackend.Infrastructure\GastroSyncBackend.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
