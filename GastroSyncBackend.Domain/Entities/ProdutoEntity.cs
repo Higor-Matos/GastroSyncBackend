@@ -1,6 +1,6 @@
 ﻿namespace GastroSyncBackend.Domain.Entities;
 
-public class Produto
+public class ProdutoEntity
 {
     public int Id { get; set; }
     public string? Nome { get; set; }

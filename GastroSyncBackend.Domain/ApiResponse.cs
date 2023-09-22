@@ -1,4 +1,4 @@
-﻿namespace GastroSyncBackend.Domain.Responses;
+﻿namespace GastroSyncBackend.Domain;
 
 public class ApiResponse<T>
 {

@@ -1,4 +1,4 @@
-﻿namespace GastroSyncBackend.Domain.Entities;
+﻿namespace GastroSyncBackend.Domain;
 
 public class CategoriaRequest
 {
