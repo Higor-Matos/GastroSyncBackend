@@ -1,4 +1,4 @@
-﻿using GastroSyncBackend.Domain.Implementations.Entities;
+﻿using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
