@@ -20,5 +20,10 @@ public class ProdutoService : IProdutoService
         return _context.Produtos!.ToList();
     }
 
+    public List<Produto> GetProdutosByCategoria(string categoria)
+    {
+        return _context.Produtos?.Where(p => p.Categoria == categoria).ToList() ?? new List<Produto>();
+    }
+
 }
 

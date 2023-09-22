@@ -7,4 +7,5 @@ namespace GastroSyncBackend.Services.Interfaces;
 public interface IProdutoService
 {
     List<Produto> GetProdutos();
+    public List<Produto> GetProdutosByCategoria(string categoria);
 }
