@@ -30,7 +30,7 @@ public class AppDbContextTests
         using var dbContext = new AppDbContext(options, _loggerMock.Object);
 
         var model = dbContext.Model;
-        var entity = model.FindEntityType(typeof(Produto));
+        var entity = model.FindEntityType(typeof(ProdutoEntity));
 
         Assert.NotNull(entity?.FindPrimaryKey());
         Assert.NotNull(entity.FindProperty("Id"));

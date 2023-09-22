@@ -6,6 +6,6 @@ namespace GastroSyncBackend.Services.Interfaces;
 [AutoDI]
 public interface IProdutoService
 {
-    List<Produto> GetProdutos();
-    public List<Produto> GetProdutosByCategoria(string categoria);
+    List<ProdutoEntity> GetProdutos();
+    public List<ProdutoEntity> GetProdutosByCategoria(string categoria);
 }

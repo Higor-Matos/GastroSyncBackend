@@ -1,4 +1,4 @@
-﻿using GastroSyncBackend.Domain.Responses;
+﻿using GastroSyncBackend.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroSyncBackend.Presentation.Extensions;

@@ -15,14 +15,14 @@ public class ProdutoService : IProdutoService
         _context = context;
     }
 
-    public List<Produto> GetProdutos()
+    public List<ProdutoEntity> GetProdutos()
     {
         return _context.Produtos!.ToList();
     }
 
-    public List<Produto> GetProdutosByCategoria(string categoria)
+    public List<ProdutoEntity> GetProdutosByCategoria(string categoria)
     {
-        return _context.Produtos?.Where(p => p.Categoria == categoria).ToList() ?? new List<Produto>();
+        return _context.Produtos?.Where(p => p.Categoria == categoria).ToList() ?? new List<ProdutoEntity>();
     }
 
 }
