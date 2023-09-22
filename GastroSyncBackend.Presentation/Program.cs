@@ -1,8 +1,6 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using GastroSyncBackend.Common;
 using GastroSyncBackend.Infrastructure.Implementations.DbContexts;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
+using GastroSyncBackend.Presentation.Extensions;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
@@ -12,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigureApp(builder);
 
 var app = builder.Build();
+
+string path = AppDomain.CurrentDomain.BaseDirectory;
+
 
 try
 {
@@ -55,20 +56,19 @@ void ConfigureApp(WebApplicationBuilder builder)
     builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-    var containerBuilder = new ContainerBuilder();
-    ConfigureContainer(containerBuilder, builder.Services);
-    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+    // Classe de resolução de dependências
+    var result = builder.Services.AddServicesWithAutoDi();
+
+    if (result)
+    {
+        logger.Info("Todos os assemblies foram carregados com sucesso.");
+    }
+    else
+    {
+        logger.Error("Ocorreu um problema durante o carregamento dos assemblies.");
+    }
 }
 
-void ConfigureContainer(ContainerBuilder containerBuilder, IServiceCollection services)
-{
-    // Varredura de Assembly e Atributo AutoDI
-    containerBuilder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
-        .Where(t => t.GetCustomAttributes(typeof(AutoDIAttribute), false).Any())
-        .AsImplementedInterfaces();
-
-    containerBuilder.Populate(services);
-}
 
 void InitializeDatabase(IHost app)
 {

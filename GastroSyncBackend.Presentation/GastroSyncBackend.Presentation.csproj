@@ -28,7 +28,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GastroSyncBackend.Common\GastroSyncBackend.Common.csproj" />
+    <ProjectReference Include="..\GastroSyncBackend.Domain\GastroSyncBackend.Domain.csproj" />
     <ProjectReference Include="..\GastroSyncBackend.Infrastructure\GastroSyncBackend.Infrastructure.csproj" />
+    <ProjectReference Include="..\GastroSyncBackend.Repository\GastroSyncBackend.Repository.csproj" />
     <ProjectReference Include="..\GastroSyncBackend.Services\GastroSyncBackend.Services.csproj" />
   </ItemGroup>
 
