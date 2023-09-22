@@ -1,4 +1,6 @@
-﻿using GastroSyncBackend.Presentation.Extensions;
+﻿using GastroSyncBackend.Domain.Entities;
+using GastroSyncBackend.Domain.Responses;
+using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,8 +22,6 @@ public class ProdutoController : ControllerBase
     [HttpGet]
     public IActionResult GetProdutos()
     {
-        const string logMessageTemplate = "Ocorreu uma exceção ao tentar obter produtos: {Message}";
-
         try
         {
             var produtos = _produtoService.GetProdutos();
@@ -29,8 +29,23 @@ public class ProdutoController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(logMessageTemplate, ex.Message);
+            _logger.LogError("Ocorreu uma exceção ao tentar obter produtos: {Message}", ex.Message);
             return this.ApiResponse(false, "Falha ao obter produtos.", (string)null!);
+        }
+    }
+
+    [HttpPost("ByCategoria")]
+    public IActionResult GetProdutosByCategoria([FromBody] CategoriaRequest request)
+    {
+        try
+        {
+            var produtos = _produtoService.GetProdutosByCategoria(request.Categoria!);
+            return this.ApiResponse(true, "Produtos recuperados com sucesso.", produtos);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Erro ao recuperar produtos: {ErrorMessage}", ex.Message);
+            return this.ApiResponse(false, "Erro interno do servidor.", string.Empty);
         }
     }
 }

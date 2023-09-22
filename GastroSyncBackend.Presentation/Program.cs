@@ -11,8 +11,7 @@ ConfigureApp(builder);
 
 var app = builder.Build();
 
-string path = AppDomain.CurrentDomain.BaseDirectory;
-
+var path = AppDomain.CurrentDomain.BaseDirectory;
 
 try
 {
