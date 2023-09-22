@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Extension\**" />
+    <Content Remove="Extension\**" />
+    <EmbeddedResource Remove="Extension\**" />
+    <None Remove="Extension\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
@@ -23,10 +30,6 @@
     <ProjectReference Include="..\GastroSyncBackend.Common\GastroSyncBackend.Common.csproj" />
     <ProjectReference Include="..\GastroSyncBackend.Infrastructure\GastroSyncBackend.Infrastructure.csproj" />
     <ProjectReference Include="..\GastroSyncBackend.Services\GastroSyncBackend.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extension\" />
   </ItemGroup>
 
 </Project>

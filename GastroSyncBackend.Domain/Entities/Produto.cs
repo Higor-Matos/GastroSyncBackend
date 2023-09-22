@@ -1,4 +1,4 @@
-﻿namespace GastroSyncBackend.Domain.Implementations.Entities;
+﻿namespace GastroSyncBackend.Domain.Entities;
 
 public class Produto
 {

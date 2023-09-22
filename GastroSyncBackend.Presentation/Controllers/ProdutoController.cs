@@ -1,4 +1,5 @@
 ﻿using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
+using GastroSyncBackend.Presentation.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroSyncBackend.Presentation.Controllers;
@@ -19,7 +20,7 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll([FromQuery] string tipo)
+    public IActionResult GetProdutos([FromQuery] string tipo)
     {
         _logger.LogInformation("Entrou no método GetAll");
         try
@@ -44,13 +45,14 @@ public class ProdutoController : ControllerBase
             }
 
             _logger.LogInformation("GetAll: Produtos do tipo {Tipo} buscados com sucesso", tipo);
-            return Ok(produtos);
+            return this.ApiResponse(true, "Produtos obtidos com sucesso.", produtos);
         }
         catch (Exception ex)
         {
-            _logger.LogError("GetAll: Erro ao executar o método - {MensagemErro}", ex.Message);  // Modelo padronizado
-            return BadRequest("Ocorreu um erro ao buscar os produtos");
+            const string logMessageTemplate = "Ocorreu uma exceção ao tentar obter produtos: {Message}";
+            _logger.LogError(logMessageTemplate, ex.Message);
+            return this.ApiResponse(false, "Falha ao obter produtos.", (string)null!);
         }
     }
-    
+
 }
