@@ -19,11 +19,11 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpGet("todos")]
-    public IActionResult GetProdutos()
+    public async Task<IActionResult> GetProdutos()
     {
         try
         {
-            var produtos = _produtoService.GetProdutos();
+            var produtos = await _produtoService.GetProdutosAsync();
             return this.ApiResponse(true, "Produtos obtidos com sucesso.", produtos);
         }
         catch (Exception ex)
@@ -34,11 +34,11 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPost("porCategoria")]
-    public IActionResult GetProdutosByCategoria([FromBody] CategoriaRequest request)
+    public async Task<IActionResult> GetProdutosByCategoria([FromBody] CategoriaRequest request)
     {
         try
         {
-            var produtos = _produtoService.GetProdutosByCategoria(request.Categoria!);
+            var produtos = await _produtoService.GetProdutosByCategoriaAsync(request.Categoria!);
             return this.ApiResponse(true, "Produtos recuperados com sucesso.", produtos);
         }
         catch (Exception ex)

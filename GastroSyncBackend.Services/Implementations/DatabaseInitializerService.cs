@@ -1,5 +1,6 @@
 ﻿using GastroSyncBackend.Infrastructure.Implementations.DbContexts;
 using GastroSyncBackend.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace GastroSyncBackend.Services.Implementations;
@@ -16,11 +17,11 @@ public class DatabaseInitializerService : IDatabaseInitializerService
         _logger = logger;
     }
 
-    public void SeedDatabase()
+    public async Task SeedDatabaseAsync()
     {
         try
         {
-            if (_context.Produtos == null || _context.Produtos.Any()) return;
+            if (_context.Produtos == null || await _context.Produtos.AnyAsync()) return;
             _logger.LogInformation("DatabaseInitializerService: Semeadura do banco de dados concluída com sucesso");
 
         }

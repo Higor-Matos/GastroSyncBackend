@@ -5,5 +5,5 @@ namespace GastroSyncBackend.Services.Interfaces;
 [AutoDI]
 public interface IDatabaseInitializerService
 {
-    void SeedDatabase();
+    Task SeedDatabaseAsync();
 }
