@@ -11,8 +11,6 @@ ConfigureApp(builder);
 
 var app = builder.Build();
 
-var path = AppDomain.CurrentDomain.BaseDirectory;
-
 try
 {
     logger.Info("Configurando e construindo a aplicação...");

@@ -1,6 +1,7 @@
 ﻿using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GastroSyncBackend.Repository.Implementations;
 
@@ -18,5 +19,10 @@ public class MesaRepository : IMesaRepository
         _dbContext.Mesas!.Add(mesa);
         await _dbContext.SaveChangesAsync();
         return mesa;
+    }
+
+    public async Task<bool> MesaExisteAsync(int numeroMesa)
+    {
+        return await _dbContext.Mesas!.AnyAsync(m => m.NumeroMesa == numeroMesa);
     }
 }

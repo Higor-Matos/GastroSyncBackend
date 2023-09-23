@@ -6,4 +6,6 @@ namespace GastroSyncBackend.Repository.Interfaces;
 public interface IMesaRepository
 {
     Task<MesaEntity> CreateMesaAsync(MesaEntity mesa);
+    Task<bool> MesaExisteAsync(int numeroMesa);
+
 }

@@ -21,14 +21,22 @@ public class MesaController : ControllerBase
     {
         try
         {
+            // Verifica se a mesa com o número dado já existe
+            if (await _mesaService.MesaExisteAsync(numeroMesa))
+            {
+                return this.ApiResponse<MesaEntity>(false, "Número de mesa já existe.", null!);
+            }
+
+            // Cria a nova mesa se não existir uma com o mesmo número
             var mesa = await _mesaService.CreateMesaAsync(numeroMesa);
-            return this.ApiResponse<MesaEntity>(true, "Mesa criada com sucesso.", mesa);
+            return this.ApiResponse(true, "Mesa criada com sucesso.", mesa);
         }
         catch (Exception ex)
         {
             return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
         }
     }
+
 
     [HttpGet("todas")]
     public async Task<IActionResult> GetAll()

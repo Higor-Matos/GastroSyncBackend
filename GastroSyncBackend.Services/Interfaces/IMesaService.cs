@@ -12,5 +12,5 @@ public interface IMesaService
     Task<MesaEntity?> GetMesaById(int id);
     Task<bool> RemoveMesaById(int id);
     Task RemoveAllMesasAndResetId();
-
+    Task<bool> MesaExisteAsync(int numeroMesa);
 }
