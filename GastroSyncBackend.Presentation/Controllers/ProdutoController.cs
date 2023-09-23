@@ -18,7 +18,7 @@ public class ProdutoController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet("todos")]
     public IActionResult GetProdutos()
     {
         try
@@ -33,7 +33,7 @@ public class ProdutoController : ControllerBase
         }
     }
 
-    [HttpPost("ByCategoria")]
+    [HttpPost("porCategoria")]
     public IActionResult GetProdutosByCategoria([FromBody] CategoriaRequest request)
     {
         try

@@ -9,5 +9,7 @@ public interface IMesaService
     Task<MesaEntity> CreateMesaAsync(int id);
 
     List<MesaEntity> GetAllMesas();
+    MesaEntity? GetMesaById(int id);
+
 
 }
