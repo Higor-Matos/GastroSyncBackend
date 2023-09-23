@@ -13,7 +13,8 @@ public interface IAppDbContext
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
     Task EnsureDatabaseCreatedAsync();
     Task DatabaseMigrateAsync();
-    public DbSet<MesaEntity>? Mesas { get; set; }
+    DbSet<MesaEntity>? Mesas { get; set; }
+    DbSet<ConsumidorEntity>? Consumidores { get; set; }
     DatabaseFacade Database { get; }
     IModel Model { get; }
 

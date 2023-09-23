@@ -20,29 +20,34 @@ public class MesaService : IMesaService
 
     public async Task<MesaEntity> CreateMesaAsync(int numeroMesa, string local)
     {
-        var mesa = new MesaEntity { NumeroMesa = numeroMesa, Local = local };
-        
         return await _mesaRepository.CreateMesaAsync(numeroMesa, local);
     }
 
-    public async Task<List<MesaEntity>> GetAllMesas()
+    public async Task<IEnumerable<MesaEntity>> GetAllMesas()
     {
-        return await _context.Mesas!.ToListAsync();
+        return await _context.Mesas!.Include(m => m.Consumidores).ToListAsync();
     }
 
-    public async Task<MesaEntity?> GetMesaById(int id)
-    {
-        return await _context.Mesas!.FirstOrDefaultAsync(m => m.Id == id);
-    }
 
+    public async Task<MesaEntity> GetMesaById(int id)
+    {
+        return (await _context.Mesas!.Include(m => m.Consumidores).FirstOrDefaultAsync(m => m.Id == id))!;
+    }
     public async Task<bool> RemoveMesaById(int id)
     {
-        var mesa = await _context.Mesas!.FirstOrDefaultAsync(m => m.Id == id);
-        if (mesa == null) return false;
+        var mesa = await _context.Mesas!.Include(m => m.Consumidores).FirstOrDefaultAsync(m => m.Id == id);
+        if (mesa == null)
+        {
+            return false;
+        }
+
+        _context.Consumidores!.RemoveRange(_context.Consumidores!);
         _context.Mesas!.Remove(mesa);
+
         await _context.SaveChangesAsync();
         return true;
     }
+
 
     public async Task RemoveAllMesasAndResetId()
     {
@@ -59,6 +64,11 @@ public class MesaService : IMesaService
     public async Task<bool> MesaExisteAsync(int numeroMesa)
     {
         return await _mesaRepository.MesaExisteAsync(numeroMesa);
+    }
+
+    public async Task AddConsumidoresAsync(int mesaId, List<string> consumidores)
+    {
+        await _mesaRepository.AddConsumidoresAsync(mesaId, consumidores);
     }
 
 }
