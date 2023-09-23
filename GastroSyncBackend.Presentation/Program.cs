@@ -15,7 +15,7 @@ try
 {
     logger.Info("Configurando e construindo a aplicação...");
 
-    InitializeAndMigrateDatabase(app);
+    var initializeAndMigrateDatabase = InitializeAndMigrateDatabase(app);
 
     logger.Info("Banco de dados verificado com sucesso.");
 

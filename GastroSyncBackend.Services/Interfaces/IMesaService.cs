@@ -6,7 +6,7 @@ namespace GastroSyncBackend.Services.Interfaces;
 [AutoDI]
 public interface IMesaService
 {
-    Task<MesaEntity> CreateMesaAsync(int id);
+    Task<MesaEntity> CreateMesaAsync(int numeroMesa, string local);
 
     Task<List<MesaEntity>> GetAllMesas();
     Task<MesaEntity?> GetMesaById(int id);
