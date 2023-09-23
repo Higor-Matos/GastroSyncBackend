@@ -7,4 +7,7 @@ namespace GastroSyncBackend.Services.Interfaces;
 public interface IMesaService
 {
     Task<MesaEntity> CreateMesaAsync(int id);
+
+    List<MesaEntity> GetAllMesas();
+
 }
