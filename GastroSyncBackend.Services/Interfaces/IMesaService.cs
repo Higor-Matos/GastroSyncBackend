@@ -8,8 +8,9 @@ public interface IMesaService
 {
     Task<MesaEntity> CreateMesaAsync(int id);
 
-    List<MesaEntity> GetAllMesas();
-    MesaEntity? GetMesaById(int id);
-
+    Task<List<MesaEntity>> GetAllMesas();
+    Task<MesaEntity?> GetMesaById(int id);
+    Task<bool> RemoveMesaById(int id);
+    Task RemoveAllMesasAndResetId();
 
 }

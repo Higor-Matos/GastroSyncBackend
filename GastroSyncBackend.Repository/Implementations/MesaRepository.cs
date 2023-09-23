@@ -15,7 +15,7 @@ public class MesaRepository : IMesaRepository
 
     public async Task<MesaEntity> CreateMesaAsync(MesaEntity mesa)
     {
-        _dbContext.Mesas.Add(mesa);
+        _dbContext.Mesas!.Add(mesa);
         await _dbContext.SaveChangesAsync();
         return mesa;
     }

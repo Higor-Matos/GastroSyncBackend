@@ -55,7 +55,8 @@ void ConfigureApp(WebApplicationBuilder builder)
 
     // Configuração do DbContext
     builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()));
 
     // Classe de resolução de dependências
     var result = builder.Services.AddServicesWithAutoDi();
@@ -71,12 +72,12 @@ void ConfigureApp(WebApplicationBuilder builder)
 }
 
 
-void InitializeAndMigrateDatabase(IHost app)
+async Task InitializeAndMigrateDatabase(IHost app)
 {
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
-    dbContext.EnsureDatabaseCreated();
-    dbContext.DatabaseMigrate();
+    await dbContext.EnsureDatabaseCreatedAsync();
+    await dbContext.DatabaseMigrateAsync();
     logger.Info("Banco de dados verificado e migrado com sucesso.");
 }
 

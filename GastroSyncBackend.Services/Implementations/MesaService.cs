@@ -24,14 +24,37 @@ public class MesaService : IMesaService
         return await _mesaRepository.CreateMesaAsync(mesa);
     }
 
-    public List<MesaEntity> GetAllMesas()
+    public async Task<List<MesaEntity>> GetAllMesas()
     {
-        return _context.Mesas!.ToList();
+        return await _context.Mesas!.ToListAsync();
     }
 
-    public MesaEntity? GetMesaById(int id)
+    public async Task<MesaEntity?> GetMesaById(int id)
     {
-        return _context.Mesas?.FirstOrDefault(m => m.Id == id);
+        return await _context.Mesas!.FirstOrDefaultAsync(m => m.Id == id);
     }
+
+    public async Task<bool> RemoveMesaById(int id)
+    {
+        var mesa = await _context.Mesas!.FirstOrDefaultAsync(m => m.Id == id);
+        if (mesa == null) return false;
+        _context.Mesas!.Remove(mesa);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task RemoveAllMesasAndResetId()
+    {
+        // Remove todas as mesas
+        _context.Mesas!.RemoveRange(_context.Mesas);
+        await _context.SaveChangesAsync();
+
+        // Redefine o contador de identidade
+        var entityType = _context.Model.FindEntityType(typeof(MesaEntity));
+        var tableName = entityType!.GetTableName();
+        var sql = $"DBCC CHECKIDENT ('{tableName}', RESEED, 0)";
+        _context.Database.ExecuteSqlRaw(sql);
+    }
+
 
 }

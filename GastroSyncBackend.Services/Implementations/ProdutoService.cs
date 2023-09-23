@@ -1,6 +1,7 @@
 ﻿using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GastroSyncBackend.Services;
 
@@ -15,15 +16,14 @@ public class ProdutoService : IProdutoService
         _context = context;
     }
 
-    public List<ProdutoEntity> GetProdutos()
+    public async Task<List<ProdutoEntity>> GetProdutosAsync()
     {
-        return _context.Produtos!.ToList();
+        return await _context.Produtos!.ToListAsync();
     }
 
-    public List<ProdutoEntity> GetProdutosByCategoria(string categoria)
+    public async Task<List<ProdutoEntity>> GetProdutosByCategoriaAsync(string categoria)
     {
-        return _context.Produtos?.Where(p => p.Categoria == categoria).ToList() ?? new List<ProdutoEntity>();
+        return await _context.Produtos?.Where(p => p.Categoria == categoria).ToListAsync()!;
     }
 
 }
-

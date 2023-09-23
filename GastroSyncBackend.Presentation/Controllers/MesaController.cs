@@ -31,17 +31,32 @@ public class MesaController : ControllerBase
     }
 
     [HttpGet("todas")]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var mesas = _mesaService.GetAllMesas();
+        var mesas = await _mesaService.GetAllMesas();
         return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesas);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var mesa = _mesaService.GetMesaById(id);
+        var mesa = await _mesaService.GetMesaById(id);
         return mesa != null ? this.ApiResponse(true, "Mesa recuperada com sucesso", mesa) : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteById(int id)
+    {
+        var isRemoved = await _mesaService.RemoveMesaById(id);
+        return isRemoved ? this.ApiResponse<MesaEntity>(true, "Mesa removida com sucesso", null!) : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
+    }
+
+
+    [HttpDelete("RemoveAll")]
+    public async Task<IActionResult> RemoveAll()
+    {
+        await _mesaService.RemoveAllMesasAndResetId();
+        return this.ApiResponse<MesaEntity>(true, "Todas as mesas foram removidas", null!);
     }
 
 }
