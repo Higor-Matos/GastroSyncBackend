@@ -45,7 +45,6 @@ public class MesaService : IMesaService
 
     public async Task RemoveAllMesasAndResetId()
     {
-        // Remove todas as mesas
         _context.Mesas!.RemoveRange(_context.Mesas);
         await _context.SaveChangesAsync();
 
@@ -56,5 +55,9 @@ public class MesaService : IMesaService
         _context.Database.ExecuteSqlRaw(sql);
     }
 
+    public async Task<bool> MesaExisteAsync(int numeroMesa)
+    {
+        return await _mesaRepository.MesaExisteAsync(numeroMesa);
+    }
 
 }
