@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain;
+using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -16,19 +17,19 @@ public class MesaController : ControllerBase
         _mesaService = mesaService;
     }
 
-    [HttpPost("criar/{numeroMesa}")]
-    public async Task<IActionResult> CreateMesa(int numeroMesa)
+    [HttpPost("criar")]
+    public async Task<IActionResult> CreateMesa([FromBody] MesaCreateRequest request)
     {
         try
         {
             // Verifica se a mesa com o número dado já existe
-            if (await _mesaService.MesaExisteAsync(numeroMesa))
+            if (await _mesaService.MesaExisteAsync(request.NumeroMesa))
             {
                 return this.ApiResponse<MesaEntity>(false, "Número de mesa já existe.", null!);
             }
 
             // Cria a nova mesa se não existir uma com o mesmo número
-            var mesa = await _mesaService.CreateMesaAsync(numeroMesa);
+            var mesa = await _mesaService.CreateMesaAsync(request.NumeroMesa, request.Local!);
             return this.ApiResponse(true, "Mesa criada com sucesso.", mesa);
         }
         catch (Exception ex)
@@ -36,6 +37,7 @@ public class MesaController : ControllerBase
             return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
         }
     }
+
 
 
     [HttpGet("todas")]

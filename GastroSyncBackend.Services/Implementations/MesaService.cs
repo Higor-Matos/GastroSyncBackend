@@ -18,10 +18,11 @@ public class MesaService : IMesaService
 
     }
 
-    public async Task<MesaEntity> CreateMesaAsync(int numeroMesa)
+    public async Task<MesaEntity> CreateMesaAsync(int numeroMesa, string local)
     {
-        var mesa = new MesaEntity { NumeroMesa = numeroMesa };
-        return await _mesaRepository.CreateMesaAsync(mesa);
+        var mesa = new MesaEntity { NumeroMesa = numeroMesa, Local = local };
+        
+        return await _mesaRepository.CreateMesaAsync(numeroMesa, local);
     }
 
     public async Task<List<MesaEntity>> GetAllMesas()
