@@ -40,4 +40,6 @@ public class AppDbContext : AppDbContextBase, IAppDbContext
             .HasPrecision(18, 2);
     }
 
+    public DbSet<ConsumidorEntity>? Consumidores { get; set; }
+
 }

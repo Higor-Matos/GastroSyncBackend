@@ -1,5 +1,8 @@
-﻿namespace GastroSyncBackend.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace GastroSyncBackend.Domain.Entities;
+
+[Table("Produtos")]
 public class ProdutoEntity
 {
     public int Id { get; set; }

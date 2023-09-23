@@ -23,6 +23,20 @@ public class MesaRepository : IMesaRepository
     }
 
 
+
+    public async Task AddConsumidoresAsync(int mesaId, List<string> consumidores)
+    {
+        var mesa = await _dbContext.Mesas!.FindAsync(mesaId);
+        if (mesa != null)
+        {
+            var consumidorEntities = consumidores.Select(nome => new ConsumidorEntity { Nome = nome, MesaId = mesaId }).ToList();
+            mesa.Consumidores!.AddRange(consumidorEntities);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+
+
+
     public async Task<bool> MesaExisteAsync(int numeroMesa)
     {
         return await _dbContext.Mesas!.AnyAsync(m => m.NumeroMesa == numeroMesa);
