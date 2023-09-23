@@ -29,4 +29,9 @@ public class MesaService : IMesaService
         return _context.Mesas!.ToList();
     }
 
+    public MesaEntity? GetMesaById(int id)
+    {
+        return _context.Mesas?.FirstOrDefault(m => m.Id == id);
+    }
+
 }

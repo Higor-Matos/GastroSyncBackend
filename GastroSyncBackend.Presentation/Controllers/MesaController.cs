@@ -1,5 +1,4 @@
-﻿using Autofac.Features.Metadata;
-using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +16,7 @@ public class MesaController : ControllerBase
         _mesaService = mesaService;
     }
 
-    [HttpPost("{numeroMesa}")]
+    [HttpPost("criar/{numeroMesa}")]
     public async Task<IActionResult> CreateMesa(int numeroMesa)
     {
         try
@@ -31,12 +30,18 @@ public class MesaController : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpGet("todas")]
     public IActionResult GetAll()
     {
         var mesas = _mesaService.GetAllMesas();
         return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesas);
     }
 
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id)
+    {
+        var mesa = _mesaService.GetMesaById(id);
+        return mesa != null ? this.ApiResponse(true, "Mesa recuperada com sucesso", mesa) : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
+    }
 
 }
