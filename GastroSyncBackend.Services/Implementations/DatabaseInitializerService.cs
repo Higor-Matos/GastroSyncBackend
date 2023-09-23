@@ -14,23 +14,15 @@ public class DatabaseInitializerService : IDatabaseInitializerService
     {
         _context = context;
         _logger = logger;
-        _logger.LogInformation("DatabaseInitializerService foi instanciado");
     }
 
     public void SeedDatabase()
     {
-        _logger.LogInformation("DatabaseInitializerService: Iniciando a semeadura do banco de dados");
-
         try
         {
-            if (_context.Produtos != null && !_context.Produtos.Any())
-            {
-                _logger.LogInformation("DatabaseInitializerService: Semeadura do banco de dados concluída com sucesso");
-            }
-            else
-            {
-                _logger.LogWarning("DatabaseInitializerService: O banco de dados já contém produtos. Semeadura não necessária");
-            }
+            if (_context.Produtos == null || _context.Produtos.Any()) return;
+            _logger.LogInformation("DatabaseInitializerService: Semeadura do banco de dados concluída com sucesso");
+
         }
         catch (Exception ex)
         {

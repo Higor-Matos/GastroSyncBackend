@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Entities;
+﻿using Autofac.Features.Metadata;
+using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,4 +30,13 @@ public class MesaController : ControllerBase
             return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
         }
     }
+
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        var mesas = _mesaService.GetAllMesas();
+        return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesas);
+    }
+
+
 }
