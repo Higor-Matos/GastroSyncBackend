@@ -17,15 +17,9 @@ try
 {
     logger.Info("Configurando e construindo a aplicação...");
 
-    using var scope = app.Services.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
-    dbContext.EnsureDatabaseCreated();
-    dbContext.DatabaseMigrate();  // Isso agora deve funcionar
-
+    InitializeAndMigrateDatabase(app);
 
     logger.Info("Banco de dados verificado com sucesso.");
-
-    InitializeDatabase(app);
 
     if (app.Environment.IsDevelopment())
     {
@@ -77,12 +71,13 @@ void ConfigureApp(WebApplicationBuilder builder)
 }
 
 
-void InitializeDatabase(IHost app)
+void InitializeAndMigrateDatabase(IHost app)
 {
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
     dbContext.EnsureDatabaseCreated();
-    logger.Info("Banco de dados verificado com sucesso.");
+    dbContext.DatabaseMigrate();
+    logger.Info("Banco de dados verificado e migrado com sucesso.");
 }
 
 void EnableSwagger(IApplicationBuilder app)
