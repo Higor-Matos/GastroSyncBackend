@@ -5,8 +5,10 @@ namespace GastroSyncBackend.Repository.Interfaces;
 [AutoDI]
 public interface IMesaRepository
 {
-    Task<MesaEntity?> CreateMesaAsync(int numeroMesa, string local);
-    Task<bool> MesaExisteAsync(int numeroMesa);
-    Task<bool> AddConsumidoresAsync(int mesaId, List<string> consumidores);
-
+    Task<MesaEntity?> CriarMesa(int numeroMesa, string local);
+    Task<bool> AdicionarConsumidoresMesa(int mesaId, List<string> consumidores);
+    Task<IEnumerable<MesaEntity>> ObterTodasAsMesas();
+    Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa);
+    Task<bool> RemoveMesaPeloNumero(int mesaNumber);
+    Task<bool> RemoveTodasMesasEReiniciaId();
 }

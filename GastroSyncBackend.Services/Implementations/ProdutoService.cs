@@ -1,29 +1,31 @@
 ﻿using GastroSyncBackend.Domain.Entities;
-using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
+using GastroSyncBackend.Domain.Response;
+using GastroSyncBackend.Repository.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace GastroSyncBackend.Services;
 
 
 public class ProdutoService : IProdutoService
 {
+    private readonly IProdutoRepository _produtoRepository;
 
-    private readonly IAppDbContext _context;
-
-    public ProdutoService(IAppDbContext context)
+    public ProdutoService(IProdutoRepository produtoRepository)
     {
-        _context = context;
+        _produtoRepository = produtoRepository;
     }
 
-    public async Task<List<ProdutoEntity>> GetProdutosAsync()
+    public async Task<ServiceResponse<List<ProdutoEntity>>> GetProdutosAsync()
     {
-        return await _context.Produtos!.ToListAsync();
+        var produtos = await _produtoRepository.GetProdutosAsync();
+        return new ServiceResponse<List<ProdutoEntity>>(true, "Operação concluída", produtos);
     }
 
-    public async Task<List<ProdutoEntity>> GetProdutosByCategoriaAsync(string categoria)
+    public async Task<ServiceResponse<List<ProdutoEntity>>> GetProdutosByCategoriaAsync(string categoria)
     {
-        return await _context.Produtos?.Where(p => p.Categoria == categoria).ToListAsync()!;
+        var produtos = await _produtoRepository.GetProdutosByCategoriaAsync(categoria);
+        return new ServiceResponse<List<ProdutoEntity>>(true, "Operação concluída", produtos);
     }
+
 
 }

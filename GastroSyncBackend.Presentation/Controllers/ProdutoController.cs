@@ -20,19 +20,18 @@ public class ProdutoController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("todos")]
+    [HttpGet("RecuperarTodosProdutos")]
     public async Task<IActionResult> ObterTodosOsProdutos()
     {
-        var produtos = await _produtoService.GetProdutosAsync();
-        var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
-        return this.ApiResponse(true, "Produtos obtidos com sucesso.", produtosDto);
+        var result = await _produtoService.GetProdutosAsync();
+        return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ProdutoDTO>>(result.Data));
     }
 
-    [HttpPost("porCategoria")]
+    [HttpPost("RecuperarProdutosPorCategoria")]
     public async Task<IActionResult> ObterProdutosPorCategoria([FromBody] CategoriaRequest request)
     {
-        var produtos = await _produtoService.GetProdutosByCategoriaAsync(request.Categoria!);
-        var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
-        return this.ApiResponse(true, "Produtos recuperados com sucesso.", produtosDto);
+        var result = await _produtoService.GetProdutosByCategoriaAsync(request.Categoria!);
+        return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ProdutoDTO>>(result.Data));
     }
+
 }

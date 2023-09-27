@@ -21,70 +21,68 @@ public class MesaController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("todas")]
-    public async Task<IActionResult> ObterTodas()
+    [HttpGet("ObterTodasAsMesas")]
+    public async Task<IActionResult> ObterTodasAsMesas()
     {
-        var result = await _mesaService.ObterTodasAsMesasAsync();
+        var result = await _mesaService.ObterTodasAsMesas();
         if (!result.Success) return this.ApiResponse<object>(result.Success, result.Message, null!);
         var mesasDto = _mapper.Map<List<MesaDTO>>(result.Data);
         return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
     }
 
-    [HttpGet("numero/{numeroMesa:int}")]
+    [HttpGet("ObterMesaPorNumero/{numeroMesa:int}")]
     public async Task<IActionResult> ObterPorNumeroMesa(int numeroMesa)
     {
-        var result = await _mesaService.ObterMesaPorNumeroAsync(numeroMesa);
-        if (!result.Success) return this.ApiResponse<object>(result.Success, result.Message, null!);
-
-        var mesaDto = _mapper.Map<MesaDTO>(result.Data);
-        return this.ApiResponse(true, "Mesa recuperada com sucesso", mesaDto);
+        var result = await _mesaService.ObterMesaPorNumero(numeroMesa);
+        return this.ApiResponse(result.Success, result.Message, result.Data != null ? _mapper.Map<MesaDTO>(result.Data) : null);
     }
 
 
-    [HttpDelete("{mesaNumber:int}")]
-    public async Task<IActionResult> DeleteByMesaNumber(int mesaNumber)
+
+    [HttpDelete("RemoveMesaPeloNumero/{mesaNumber:int}")]
+    public async Task<IActionResult> RemoveMesaPeloNumero(int mesaNumber)
     {
-        var isRemoved = await _mesaService.RemoveMesaByMesaNumber(mesaNumber);
-        return isRemoved
-            ? this.ApiResponse<MesaEntity>(true, "Mesa removida com sucesso", null!)
-            : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
+        var result = await _mesaService.RemoveMesaPeloNumero(mesaNumber);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
     }
 
-    [HttpDelete("RemoveAll")]
-    public async Task<IActionResult> RemoveAll()
+
+    [HttpDelete("RemoveTodasMesas")]
+    public async Task<IActionResult> RemoveTodasMesasEReiniciaId()
     {
-        var response = await _mesaService.RemoveAllMesasAndResetId();
-        return this.ApiResponse<object>(response.Success, response.Message, null);
+        var result = await _mesaService.RemoveTodasMesasEReiniciaId();
+        return this.ApiResponse(result.Success, result.Message, result.Data);
     }
 
 
-    [HttpPost("criar")]
-    public async Task<IActionResult> CreateMesa([FromBody] MesaCreateRequest request)
+
+    [HttpPost("CriarMesa")]
+    public async Task<IActionResult> CriarMesa([FromBody] MesaCreateRequest request)
     {
         try
         {
-            var result = await _mesaService.CreateMesaAsync(request.NumeroMesa, request.Local!);
+            var result = await _mesaService.CriarMesa(request.NumeroMesa, request.Local!);
             return this.ApiResponse(result.Success, result.Message, result.Data);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
+            return this.ApiResponse<MesaEntity>(false, "Operação concluída", null);
         }
     }
 
 
-
-    [HttpPost("{mesaId:int}/add-consumidores")]
-    public async Task<IActionResult> AddConsumidores(int mesaId, [FromBody] List<string> consumidores)
+    [HttpPost("{mesaId:int}/AdicionarConsumidoresMesa")]
+    public async Task<IActionResult> AdicionarConsumidoresMesa(int mesaId, [FromBody] List<string> consumidores)
     {
         try
         {
-            var result = await _mesaService.AddConsumidoresAsync(mesaId, consumidores);
-            return result ? this.ApiResponse<MesaEntity>(true, "Consumidores adicionados com sucesso.", null!) : this.ApiResponse<MesaEntity>(false, "Falha ao adicionar consumidores.", null!);
+            var result = await _mesaService.AdicionarConsumidoresMesa(mesaId, consumidores);
+            return this.ApiResponse(result.Success, result.Message, result.Data);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
+            return this.ApiResponse<bool>(false, "Operação concluída", false);
         }
     }
+
 }

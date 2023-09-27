@@ -7,10 +7,10 @@ namespace GastroSyncBackend.Services.Interfaces;
 
 [AutoDI]
 public interface IMesaService
-{ Task<ServiceResponse<MesaEntity>> CreateMesaAsync(int numeroMesa, string local);
-    Task<bool> RemoveMesaByMesaNumber(int mesaNumber);
-    Task<ServiceResponse<bool>> RemoveAllMesasAndResetId();
-    Task<ServiceResponse<IEnumerable<MesaEntity>>> ObterTodasAsMesasAsync();
-    Task<ServiceResponse<MesaEntity>> ObterMesaPorNumeroAsync(int numeroMesa);
-    Task<bool> AddConsumidoresAsync(int mesaId, List<string> consumidores);
+{ Task<ServiceResponse<MesaEntity>> CriarMesa(int numeroMesa, string local);
+    Task<ServiceResponse<bool>> RemoveMesaPeloNumero(int mesaNumber);
+    Task<ServiceResponse<bool>> RemoveTodasMesasEReiniciaId();
+    Task<ServiceResponse<IEnumerable<MesaEntity>>> ObterTodasAsMesas();
+    Task<ServiceResponse<MesaEntity>> ObterMesaPorNumero(int numeroMesa);
+    Task<ServiceResponse<bool>> AdicionarConsumidoresMesa(int mesaId, List<string> consumidores);
 }
