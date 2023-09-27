@@ -40,6 +40,13 @@ public class AppDbContext : AppDbContextBase, IAppDbContext
             .HasPrecision(18, 2);
     }
 
+    public new async Task<TEntity?> FindAsync<TEntity>(params object[] keyValues) where TEntity : class
+    {
+        var dbSet = Set<TEntity>();
+        return await dbSet.FindAsync(keyValues);
+    }
+
+
     public DbSet<ConsumidorEntity>? Consumidores { get; set; }
 
 }

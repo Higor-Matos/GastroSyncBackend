@@ -17,5 +17,5 @@ public interface IAppDbContext
     DbSet<ConsumidorEntity>? Consumidores { get; set; }
     DatabaseFacade Database { get; }
     IModel Model { get; }
-
+    Task<TEntity?> FindAsync<TEntity>(params object[] keyValues) where TEntity : class;
 }

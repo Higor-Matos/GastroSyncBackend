@@ -1,9 +1,9 @@
-﻿using GastroSyncBackend.Domain.DTOs;
+﻿using AutoMapper;
+using GastroSyncBackend.Domain.DTOs;
 using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Domain.Request;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
-using GastroSyncBackend.Services.Interfaces.Mapping;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GastroSyncBackend.Presentation.Controllers;
@@ -13,12 +13,12 @@ namespace GastroSyncBackend.Presentation.Controllers;
 public class MesaController : ControllerBase
 {
     private readonly IMesaService _mesaService;
-    private readonly IMapToDtoService _mapToDtoService;
+    private readonly IMapper _mapper;
 
-    public MesaController(IMesaService mesaService, IMapToDtoService mapToDtoService)
+    public MesaController(IMesaService mesaService, IMapper mapper)
     {
         _mesaService = mesaService;
-        _mapToDtoService = mapToDtoService;
+        _mapper = mapper;
     }
 
     [HttpPost("criar")]
@@ -41,40 +41,40 @@ public class MesaController : ControllerBase
     }
 
     [HttpGet("todas")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> ObterTodas()
     {
-        var mesas = await _mesaService.GetAllMesas();
-        var mesaDtos = new List<MesaDto>();
-
-        foreach (var mesa in mesas)
+        var result = await _mesaService.ObterTodasAsMesasAsync();
+        if (result.Success)
         {
-            var mesaDto = await _mapToDtoService.MapMesaToDtoAsync(mesa);
-            mesaDtos.Add(mesaDto);
+            var mesasDto = _mapper.Map<List<MesaDTO>>(result.Data);
+            return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
         }
-
-        return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesaDtos);
+        return this.ApiResponse<object>(result.Success, result.Message, null!);
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("numero/{numeroMesa}")]
+    public async Task<IActionResult> ObterPorNumeroMesa(int numeroMesa)
     {
-        var mesa = await _mesaService.GetMesaById(id);
+        var result = await _mesaService.ObterMesaPorNumeroAsync(numeroMesa);
+        if (result.Success)
         {
-            var mesaDto = await _mapToDtoService.MapMesaToDtoAsync(mesa);
+            var mesaDto = _mapper.Map<MesaDTO>(result.Data);
             return this.ApiResponse(true, "Mesa recuperada com sucesso", mesaDto);
         }
+        return this.ApiResponse<object>(result.Success, result.Message, null!);
     }
+    
 
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteById(int id)
+    [HttpDelete("{mesaNumber}")]
+    public async Task<IActionResult> DeleteByMesaNumber(int mesaNumber)
     {
-        var isRemoved = await _mesaService.RemoveMesaById(id);
+        var isRemoved = await _mesaService.RemoveMesaByMesaNumber(mesaNumber);
         return isRemoved
             ? this.ApiResponse<MesaEntity>(true, "Mesa removida com sucesso", null!)
             : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
     }
+
 
 
     [HttpDelete("RemoveAll")]
@@ -89,13 +89,14 @@ public class MesaController : ControllerBase
     {
         try
         {
-            await _mesaService.AddConsumidoresAsync(mesaId, consumidores);
-            return this.ApiResponse<MesaEntity>(true, "Consumidores adicionados com sucesso.", null!);
+            var result = await _mesaService.AddConsumidoresAsync(mesaId, consumidores);
+            return result ? this.ApiResponse<MesaEntity>(true, "Consumidores adicionados com sucesso.", null!) : this.ApiResponse<MesaEntity>(false, "Falha ao adicionar consumidores.", null!);
         }
         catch (Exception ex)
         {
             return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
         }
     }
+
 
 }

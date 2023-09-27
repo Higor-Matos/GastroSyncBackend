@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
 
                     if (implementationType == null) continue;
                     services.AddTransient(type, implementationType);
+                    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
                 }
             }
             return true;

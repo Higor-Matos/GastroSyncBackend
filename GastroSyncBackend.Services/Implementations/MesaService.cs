@@ -3,6 +3,8 @@ using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using GastroSyncBackend.Domain.Response;
 
 namespace GastroSyncBackend.Services;
 
@@ -23,25 +25,32 @@ public class MesaService : IMesaService
         return await _mesaRepository.CreateMesaAsync(numeroMesa, local);
     }
 
-    public async Task<IEnumerable<MesaEntity>> GetAllMesas()
+    public async Task<IEnumerable> GetAllMesas()
     {
         return await _context.Mesas!.Include(m => m.Consumidores).ToListAsync();
     }
 
 
-    public async Task<MesaEntity> GetMesaById(int id)
+    public async Task<MesaEntity> GetMesaByNumero(int numeroMesa)
     {
-        return (await _context.Mesas!.Include(m => m.Consumidores).FirstOrDefaultAsync(m => m.Id == id))!;
+        var query = _context.Mesas!.Where(m => m.NumeroMesa == numeroMesa);
+
+        return (await query
+            .Include(m => m.Consumidores)
+            .FirstOrDefaultAsync())!;
     }
-    public async Task<bool> RemoveMesaById(int id)
+
+
+
+    public async Task<bool> RemoveMesaByMesaNumber(int mesaNumber)
     {
-        var mesa = await _context.Mesas!.Include(m => m.Consumidores).FirstOrDefaultAsync(m => m.Id == id);
+        var mesa = await _context.Mesas!.Include(m => m.Consumidores).FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumber);
         if (mesa == null)
         {
             return false;
         }
 
-        _context.Consumidores!.RemoveRange(_context.Consumidores!);
+        _context.Consumidores!.RemoveRange(mesa.Consumidores!);
         _context.Mesas!.Remove(mesa);
 
         await _context.SaveChangesAsync();
@@ -66,9 +75,35 @@ public class MesaService : IMesaService
         return await _mesaRepository.MesaExisteAsync(numeroMesa);
     }
 
-    public async Task AddConsumidoresAsync(int mesaId, List<string> consumidores)
+
+
+    public async Task<bool> AddConsumidoresAsync(int mesaId, List<string> consumidores)
     {
-        await _mesaRepository.AddConsumidoresAsync(mesaId, consumidores);
+        var result = await _mesaRepository.AddConsumidoresAsync(mesaId, consumidores);
+        return result;
+    }
+
+    public async Task<ServiceResponse<IEnumerable<MesaEntity>>> ObterTodasAsMesasAsync()
+    {
+        var mesas = await _context.Mesas!.Include(m => m.Consumidores).ToListAsync();
+        return !mesas.Any() ? new ServiceResponse<IEnumerable<MesaEntity>>(false, "Nenhuma mesa disponível") : new ServiceResponse<IEnumerable<MesaEntity>>(true, "Operação bem-sucedida", mesas);
+    }
+
+    public async Task<ServiceResponse<MesaEntity>> ObterMesaPorNumeroAsync(int numeroMesa)
+    {
+        var mesa = await _context.Mesas!.Where(m => m.NumeroMesa == numeroMesa)
+            .Include(m => m.Consumidores)
+            .FirstOrDefaultAsync();
+
+        if (mesa == null)
+        {
+            return new ServiceResponse<MesaEntity>(false, "Mesa não encontrada");
+        }
+        if (mesa.Consumidores == null || !mesa.Consumidores.Any())
+        {
+            return new ServiceResponse<MesaEntity>(false, "Nenhum consumidor na mesa");
+        }
+        return new ServiceResponse<MesaEntity>(true, "Operação bem-sucedida", mesa);
     }
 
 }
