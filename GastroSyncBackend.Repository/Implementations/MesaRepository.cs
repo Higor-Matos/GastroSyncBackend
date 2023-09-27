@@ -24,16 +24,18 @@ public class MesaRepository : IMesaRepository
 
 
 
-    public async Task AddConsumidoresAsync(int mesaId, List<string> consumidores)
+    public async Task<bool> AddConsumidoresAsync(int mesaId, List<string> consumidores)
     {
-        var mesa = await _dbContext.Mesas!.FindAsync(mesaId);
-        if (mesa != null)
-        {
-            var consumidorEntities = consumidores.Select(nome => new ConsumidorEntity { Nome = nome, MesaId = mesaId }).ToList();
-            mesa.Consumidores!.AddRange(consumidorEntities);
-            await _dbContext.SaveChangesAsync();
-        }
+        var mesa = await _dbContext.Mesas!.FirstOrDefaultAsync(m => m.NumeroMesa == mesaId);
+        if (mesa == null) return false;
+        var consumidorEntities = consumidores.Select(nome => new ConsumidorEntity { Nome = nome, MesaId = mesaId })
+            .ToList();
+        mesa.Consumidores!.AddRange(consumidorEntities);
+        await _dbContext.SaveChangesAsync();
+        return true;
+
     }
+
 
 
 
