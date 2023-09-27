@@ -81,8 +81,16 @@ public class MesaController : ControllerBase
         }
         catch (Exception)
         {
-            return this.ApiResponse<bool>(false, "Operação concluída", false);
+            return this.ApiResponse(false, "Operação concluída", false);
         }
     }
+
+    [HttpGet("{mesaNumero:int}/ObterConsumidoresMesa")]
+    public async Task<IActionResult> ObterConsumidoresMesa(int mesaNumero)
+    {
+        var result = await _mesaService.ObterConsumidoresMesa(mesaNumero);
+        return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ConsumidorDTO>>(result.Data));
+    }
+
 
 }
