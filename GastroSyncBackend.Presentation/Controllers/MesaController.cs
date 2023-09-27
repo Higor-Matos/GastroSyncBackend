@@ -63,19 +63,16 @@ public class MesaController : ControllerBase
     {
         try
         {
-            if (await _mesaService.MesaExisteAsync(request.NumeroMesa))
-            {
-                return this.ApiResponse<MesaEntity>(false, "Número de mesa já existe.", null!);
-            }
-
-            var mesa = await _mesaService.CreateMesaAsync(request.NumeroMesa, request.Local!);
-            return this.ApiResponse(true, "Mesa criada com sucesso.", mesa);
+            var result = await _mesaService.CreateMesaAsync(request.NumeroMesa, request.Local!);
+            return this.ApiResponse(result.Success, result.Message, result.Data);
         }
         catch (Exception ex)
         {
             return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
         }
     }
+
+
 
     [HttpPost("{mesaId:int}/add-consumidores")]
     public async Task<IActionResult> AddConsumidores(int mesaId, [FromBody] List<string> consumidores)

@@ -4,7 +4,6 @@ using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 
 namespace GastroSyncBackend.Services;
 
@@ -20,10 +19,18 @@ public class MesaService : IMesaService
     }
 
 
-    public async Task<MesaEntity?> CreateMesaAsync(int numeroMesa, string local)
+    public async Task<ServiceResponse<MesaEntity>> CreateMesaAsync(int numeroMesa, string local)
     {
-        return await _mesaRepository.CreateMesaAsync(numeroMesa, local);
+        var mesaExistente = await ObterMesaPorNumeroAsync(numeroMesa);
+        if (mesaExistente.Success)
+        {
+            return new ServiceResponse<MesaEntity>(false, "Número de mesa já existe.");
+        }
+
+        var mesa = await _mesaRepository.CreateMesaAsync(numeroMesa, local);
+        return new ServiceResponse<MesaEntity>(true, "Mesa criada com sucesso.", mesa);
     }
+
 
     public async Task<bool> RemoveMesaByMesaNumber(int mesaNumber)
     {
@@ -62,21 +69,6 @@ public class MesaService : IMesaService
         return new ServiceResponse<bool>(true, "Todas as mesas foram removidas");
     }
 
-
-    public async Task<IEnumerable> GetAllMesas()
-    {
-        return await _context.Mesas!.Include(m => m.Consumidores).ToListAsync();
-    }
-
-    public async Task<MesaEntity> GetMesaByNumero(int numeroMesa)
-    {
-        var query = _context.Mesas!.Where(m => m.NumeroMesa == numeroMesa);
-
-        return (await query
-            .Include(m => m.Consumidores)
-            .FirstOrDefaultAsync())!;
-    }
-
     public async Task<ServiceResponse<IEnumerable<MesaEntity>>> ObterTodasAsMesasAsync()
     {
         var mesas = await _context.Mesas!.Include(m => m.Consumidores).ToListAsync();
@@ -87,17 +79,17 @@ public class MesaService : IMesaService
 
     public async Task<ServiceResponse<MesaEntity>> ObterMesaPorNumeroAsync(int numeroMesa)
     {
-        var mesa = await _context.Mesas!.Where(m => m.NumeroMesa == numeroMesa)
+        var mesa = await _context.Mesas!
+            .Where(m => m.NumeroMesa == numeroMesa)
             .Include(m => m.Consumidores)
             .FirstOrDefaultAsync();
 
-        return mesa == null ? new ServiceResponse<MesaEntity>(false, "Mesa não encontrada") : new ServiceResponse<MesaEntity>(true, "Operação bem-sucedida", mesa);
+        return mesa != null
+            ? new ServiceResponse<MesaEntity>(true, "Operação bem-sucedida", mesa)
+            : new ServiceResponse<MesaEntity>(false, "Mesa não encontrada");
     }
 
-    public async Task<bool> MesaExisteAsync(int numeroMesa)
-    {
-        return await _mesaRepository.MesaExisteAsync(numeroMesa);
-    }
+
 
     public async Task<bool> AddConsumidoresAsync(int mesaId, List<string> consumidores)
     {
