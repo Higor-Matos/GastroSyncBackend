@@ -12,13 +12,11 @@ namespace GastroSyncBackend.Presentation.Controllers;
 public class ProdutoController : ControllerBase
 {
     private readonly IProdutoService _produtoService;
-    private readonly ILogger<ProdutoController> _logger;
     private readonly IMapper _mapper;
 
-    public ProdutoController(IProdutoService produtoService, ILogger<ProdutoController> logger, IMapper mapper)
+    public ProdutoController(IProdutoService produtoService, IMapper mapper)
     {
         _produtoService = produtoService;
-        _logger = logger;
         _mapper = mapper;
     }
 

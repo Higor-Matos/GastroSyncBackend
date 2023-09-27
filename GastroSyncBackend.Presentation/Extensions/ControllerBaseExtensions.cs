@@ -6,10 +6,10 @@ namespace GastroSyncBackend.Presentation.Extensions;
 
 public static class ControllerBaseExtensions
 {
-    public static IActionResult ApiResponse<T>(this ControllerBase controller, bool success, string message, T data)
+    public static IActionResult ApiResponse<T>(this ControllerBase controller, bool success, string message, T? data)
     {
         if (controller == null) throw new ArgumentNullException(nameof(controller));
-        return new JsonResult(new ApiResponse<T>
+        return new JsonResult(new ApiResponse<T?>
         {
             Success = success,
             Message = message,

@@ -35,9 +35,11 @@ public class MesaController : ControllerBase
     {
         var result = await _mesaService.ObterMesaPorNumeroAsync(numeroMesa);
         if (!result.Success) return this.ApiResponse<object>(result.Success, result.Message, null!);
+
         var mesaDto = _mapper.Map<MesaDTO>(result.Data);
         return this.ApiResponse(true, "Mesa recuperada com sucesso", mesaDto);
     }
+
 
     [HttpDelete("{mesaNumber:int}")]
     public async Task<IActionResult> DeleteByMesaNumber(int mesaNumber)
@@ -51,9 +53,10 @@ public class MesaController : ControllerBase
     [HttpDelete("RemoveAll")]
     public async Task<IActionResult> RemoveAll()
     {
-        await _mesaService.RemoveAllMesasAndResetId();
-        return this.ApiResponse<MesaEntity>(true, "Todas as mesas foram removidas", null!);
+        var response = await _mesaService.RemoveAllMesasAndResetId();
+        return this.ApiResponse<object>(response.Success, response.Message, null);
     }
+
 
     [HttpPost("criar")]
     public async Task<IActionResult> CreateMesa([FromBody] MesaCreateRequest request)
