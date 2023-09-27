@@ -21,6 +21,40 @@ public class MesaController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("todas")]
+    public async Task<IActionResult> ObterTodas()
+    {
+        var result = await _mesaService.ObterTodasAsMesasAsync();
+        if (!result.Success) return this.ApiResponse<object>(result.Success, result.Message, null!);
+        var mesasDto = _mapper.Map<List<MesaDTO>>(result.Data);
+        return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
+    }
+
+    [HttpGet("numero/{numeroMesa:int}")]
+    public async Task<IActionResult> ObterPorNumeroMesa(int numeroMesa)
+    {
+        var result = await _mesaService.ObterMesaPorNumeroAsync(numeroMesa);
+        if (!result.Success) return this.ApiResponse<object>(result.Success, result.Message, null!);
+        var mesaDto = _mapper.Map<MesaDTO>(result.Data);
+        return this.ApiResponse(true, "Mesa recuperada com sucesso", mesaDto);
+    }
+
+    [HttpDelete("{mesaNumber:int}")]
+    public async Task<IActionResult> DeleteByMesaNumber(int mesaNumber)
+    {
+        var isRemoved = await _mesaService.RemoveMesaByMesaNumber(mesaNumber);
+        return isRemoved
+            ? this.ApiResponse<MesaEntity>(true, "Mesa removida com sucesso", null!)
+            : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
+    }
+
+    [HttpDelete("RemoveAll")]
+    public async Task<IActionResult> RemoveAll()
+    {
+        await _mesaService.RemoveAllMesasAndResetId();
+        return this.ApiResponse<MesaEntity>(true, "Todas as mesas foram removidas", null!);
+    }
+
     [HttpPost("criar")]
     public async Task<IActionResult> CreateMesa([FromBody] MesaCreateRequest request)
     {
@@ -40,51 +74,7 @@ public class MesaController : ControllerBase
         }
     }
 
-    [HttpGet("todas")]
-    public async Task<IActionResult> ObterTodas()
-    {
-        var result = await _mesaService.ObterTodasAsMesasAsync();
-        if (result.Success)
-        {
-            var mesasDto = _mapper.Map<List<MesaDTO>>(result.Data);
-            return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
-        }
-        return this.ApiResponse<object>(result.Success, result.Message, null!);
-    }
-
-
-    [HttpGet("numero/{numeroMesa}")]
-    public async Task<IActionResult> ObterPorNumeroMesa(int numeroMesa)
-    {
-        var result = await _mesaService.ObterMesaPorNumeroAsync(numeroMesa);
-        if (result.Success)
-        {
-            var mesaDto = _mapper.Map<MesaDTO>(result.Data);
-            return this.ApiResponse(true, "Mesa recuperada com sucesso", mesaDto);
-        }
-        return this.ApiResponse<object>(result.Success, result.Message, null!);
-    }
-    
-
-    [HttpDelete("{mesaNumber}")]
-    public async Task<IActionResult> DeleteByMesaNumber(int mesaNumber)
-    {
-        var isRemoved = await _mesaService.RemoveMesaByMesaNumber(mesaNumber);
-        return isRemoved
-            ? this.ApiResponse<MesaEntity>(true, "Mesa removida com sucesso", null!)
-            : this.ApiResponse<MesaEntity>(false, "Mesa não encontrada", null!);
-    }
-
-
-
-    [HttpDelete("RemoveAll")]
-    public async Task<IActionResult> RemoveAll()
-    {
-        await _mesaService.RemoveAllMesasAndResetId();
-        return this.ApiResponse<MesaEntity>(true, "Todas as mesas foram removidas", null!);
-    }
-
-    [HttpPost("{mesaId}/add-consumidores")]
+    [HttpPost("{mesaId:int}/add-consumidores")]
     public async Task<IActionResult> AddConsumidores(int mesaId, [FromBody] List<string> consumidores)
     {
         try
@@ -97,6 +87,4 @@ public class MesaController : ControllerBase
             return this.ApiResponse<MesaEntity>(false, ex.Message, null!);
         }
     }
-
-
 }

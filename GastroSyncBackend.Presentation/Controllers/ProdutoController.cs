@@ -1,4 +1,6 @@
-﻿using GastroSyncBackend.Domain.Request;
+﻿using AutoMapper;
+using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Domain.Request;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -11,40 +13,28 @@ public class ProdutoController : ControllerBase
 {
     private readonly IProdutoService _produtoService;
     private readonly ILogger<ProdutoController> _logger;
+    private readonly IMapper _mapper;
 
-    public ProdutoController(IProdutoService produtoService, ILogger<ProdutoController> logger)
+    public ProdutoController(IProdutoService produtoService, ILogger<ProdutoController> logger, IMapper mapper)
     {
         _produtoService = produtoService;
         _logger = logger;
+        _mapper = mapper;
     }
 
     [HttpGet("todos")]
-    public async Task<IActionResult> GetProdutos()
+    public async Task<IActionResult> ObterTodosOsProdutos()
     {
-        try
-        {
-            var produtos = await _produtoService.GetProdutosAsync();
-            return this.ApiResponse(true, "Produtos obtidos com sucesso.", produtos);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Ocorreu uma exceção ao tentar obter produtos: {Message}", ex.Message);
-            return this.ApiResponse(false, "Falha ao obter produtos.", (string)null!);
-        }
+        var produtos = await _produtoService.GetProdutosAsync();
+        var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
+        return this.ApiResponse(true, "Produtos obtidos com sucesso.", produtosDto);
     }
 
     [HttpPost("porCategoria")]
-    public async Task<IActionResult> GetProdutosByCategoria([FromBody] CategoriaRequest request)
+    public async Task<IActionResult> ObterProdutosPorCategoria([FromBody] CategoriaRequest request)
     {
-        try
-        {
-            var produtos = await _produtoService.GetProdutosByCategoriaAsync(request.Categoria!);
-            return this.ApiResponse(true, "Produtos recuperados com sucesso.", produtos);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Erro ao recuperar produtos: {ErrorMessage}", ex.Message);
-            return this.ApiResponse(false, "Erro interno do servidor.", string.Empty);
-        }
+        var produtos = await _produtoService.GetProdutosByCategoriaAsync(request.Categoria!);
+        var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
+        return this.ApiResponse(true, "Produtos recuperados com sucesso.", produtosDto);
     }
 }
