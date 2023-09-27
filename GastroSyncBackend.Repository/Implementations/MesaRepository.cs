@@ -94,5 +94,12 @@ public class MesaRepository : IMesaRepository
 
         return true;
     }
-    
+
+    public async Task<List<ConsumidorEntity>?> ObterConsumidoresMesa(int mesaNumero)
+    {
+        var mesa = await _dbContext.Mesas!.Include(m => m.Consumidores)
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+        return mesa?.Consumidores;
+    }
+
 }

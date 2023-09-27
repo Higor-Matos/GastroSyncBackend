@@ -11,4 +11,6 @@ public interface IMesaRepository
     Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa);
     Task<bool> RemoveMesaPeloNumero(int mesaNumber);
     Task<bool> RemoveTodasMesasEReiniciaId();
+
+    Task<List<ConsumidorEntity>?> ObterConsumidoresMesa(int mesaNumero);
 }

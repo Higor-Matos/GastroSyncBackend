@@ -2,7 +2,6 @@
 using GastroSyncBackend.Domain.Response;
 using GastroSyncBackend.Repository.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace GastroSyncBackend.Services;
 
@@ -21,14 +20,12 @@ public class MesaService : IMesaService
         var mesaExistente = await ObterMesaPorNumero(numeroMesa);
         if (mesaExistente.Success)
         {
-            return new ServiceResponse<MesaEntity>(false, "Operação concluída", null);
+            return new ServiceResponse<MesaEntity>(false, "Operação concluída");
         }
 
         var mesa = await _mesaRepository.CriarMesa(numeroMesa, local);
         return new ServiceResponse<MesaEntity>(true, "Operação concluída", mesa);
     }
-
-
 
     public async Task<ServiceResponse<bool>> RemoveMesaPeloNumero(int mesaNumber)
     {
@@ -64,6 +61,12 @@ public class MesaService : IMesaService
     {
         var result = await _mesaRepository.AdicionarConsumidoresMesa(mesaId, consumidores);
         return new ServiceResponse<bool>(result, "Operação concluída", result);
+    }
+
+    public async Task<ServiceResponse<List<ConsumidorEntity>>> ObterConsumidoresMesa(int mesaNumero)
+    {
+        var consumidores = await _mesaRepository.ObterConsumidoresMesa(mesaNumero);
+        return new ServiceResponse<List<ConsumidorEntity>>(consumidores != null, "Operação concluída", consumidores);
     }
 
 }
