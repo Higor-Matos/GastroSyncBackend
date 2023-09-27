@@ -14,7 +14,7 @@ public class MesaRepository : IMesaRepository
         _dbContext = dbContext;
     }
 
-    public async Task<MesaEntity> CreateMesaAsync(int numeroMesa, string local)
+    public async Task<MesaEntity?> CreateMesaAsync(int numeroMesa, string local)
     {
         var mesa = new MesaEntity { NumeroMesa = numeroMesa, Local = local };
         _dbContext.Mesas!.Add(mesa);
