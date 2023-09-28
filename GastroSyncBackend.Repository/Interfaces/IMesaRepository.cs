@@ -14,11 +14,11 @@ public interface IMesaRepository
     Task<bool> RemoveMesaPeloNumero(int mesaNumber);
     Task<bool> RemoveTodasMesasEReiniciaId();
 
-    Task<bool> AddPedidoAsync(int mesaId, int consumidorId, int produtoId, int quantidade);
+    Task<bool> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade);
 
     Task<List<ConsumidorEntity>?> ObterConsumidoresMesa(int mesaNumero);
 
-    Task<ConsumoMesaDTO?> GetConsumoMesa(int mesaNumero);
-    Task<ConsumoIndividualDTO?> GetConsumoIndividual(int mesaNumero, int consumidorId);
+    Task<ConsumoMesaDTO?> ObterConsumoTotalMesa(int mesaNumero);
+    Task<ConsumoIndividualDTO?> ObterConsumoTotalMesa(int mesaNumero, int consumidorId);
 
 }

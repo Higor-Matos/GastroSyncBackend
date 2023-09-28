@@ -103,7 +103,7 @@ public class MesaRepository : IMesaRepository
         return mesa?.Consumidores;
     }
 
-    public async Task<bool> AddPedidoAsync(int mesaId, int consumidorId, int produtoId, int quantidade)
+    public async Task<bool> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
         var mesa = await _dbContext.Mesas!.Include(m => m.Consumidores)!
             .ThenInclude(c => c.Pedidos)
@@ -135,7 +135,7 @@ public class MesaRepository : IMesaRepository
         return true;
     }
 
-    public async Task<ConsumoMesaDTO?> GetConsumoMesa(int mesaNumero)
+    public async Task<ConsumoMesaDTO?> ObterConsumoTotalMesa(int mesaNumero)
     {
         var mesa = await _dbContext.Mesas!
             .Include(m => m.Consumidores)!
@@ -176,7 +176,7 @@ public class MesaRepository : IMesaRepository
     }
 
 
-    public async Task<ConsumoIndividualDTO?> GetConsumoIndividual(int mesaNumero, int consumidorId)
+    public async Task<ConsumoIndividualDTO?> ObterConsumoTotalMesa(int mesaNumero, int consumidorId)
     {
         var consumidor = await _dbContext.Consumidores!
             .Include(c => c.Pedidos)!

@@ -49,8 +49,6 @@ public class MesaService : IMesaService
         return new ServiceResponse<IEnumerable<MesaEntity>>(mesaEntities.Any(), "Operação concluída", mesaEntities);
     }
 
-
-
     public async Task<ServiceResponse<MesaEntity>> ObterMesaPorNumero(int numeroMesa)
     {
         var mesa = await _mesaRepository.ObterMesaPorNumero(numeroMesa);
@@ -70,21 +68,21 @@ public class MesaService : IMesaService
         return new ServiceResponse<List<ConsumidorEntity>>(consumidores != null, "Operação concluída", consumidores);
     }
 
-    public async Task<ServiceResponse<bool>> AddPedidoAsync(int mesaId, int consumidorId, int produtoId, int quantidade)
+    public async Task<ServiceResponse<bool>> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
-        var result = await _mesaRepository.AddPedidoAsync(mesaId, consumidorId, produtoId, quantidade);
+        var result = await _mesaRepository.AdicionarPedidoConsumidorMesa(mesaId, consumidorId, produtoId, quantidade);
         return new ServiceResponse<bool>(result, "Operação concluída", result);
     }
 
-    public async Task<ServiceResponse<ConsumoMesaDTO>> GetConsumoMesa(int mesaNumero)
+    public async Task<ServiceResponse<ConsumoMesaDTO>> ObterConsumoTotalMesa(int mesaNumero)
     {
-        var consumo = await _mesaRepository.GetConsumoMesa(mesaNumero);
+        var consumo = await _mesaRepository.ObterConsumoTotalMesa(mesaNumero);
         return new ServiceResponse<ConsumoMesaDTO>(consumo != null, "Operação concluída", consumo);
     }
 
-    public async Task<ServiceResponse<ConsumoIndividualDTO>> GetConsumoIndividual(int mesaNumero, int consumidorId)
+    public async Task<ServiceResponse<ConsumoIndividualDTO>> ObterConsumoTotalMesa(int mesaNumero, int consumidorId)
     {
-        var consumo = await _mesaRepository.GetConsumoIndividual(mesaNumero, consumidorId);
+        var consumo = await _mesaRepository.ObterConsumoTotalMesa(mesaNumero, consumidorId);
         return new ServiceResponse<ConsumoIndividualDTO>(consumo != null, "Operação concluída", consumo);
     }
 }
