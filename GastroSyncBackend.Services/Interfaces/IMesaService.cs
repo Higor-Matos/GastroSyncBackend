@@ -1,4 +1,5 @@
 ﻿using GastroSyncBackend.Common;
+using GastroSyncBackend.Domain.DTOs;
 using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Domain.Response;
 
@@ -14,4 +15,7 @@ public interface IMesaService
     Task<ServiceResponse<MesaEntity>> ObterMesaPorNumero(int numeroMesa);
     Task<ServiceResponse<bool>> AdicionarConsumidoresMesa(int mesaId, List<string> consumidores);
     Task<ServiceResponse<List<ConsumidorEntity>>> ObterConsumidoresMesa(int mesaNumero);
+    Task<ServiceResponse<bool>> AddPedidoAsync(int mesaId, int consumidorId, int produtoId, int quantidade);
+    Task<ServiceResponse<ConsumoIndividualDTO>> GetConsumoIndividual(int mesaNumero, int consumidorId);
+    Task<ServiceResponse<ConsumoMesaDTO>> GetConsumoMesa(int mesaNumero);
 }

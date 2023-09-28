@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -102,4 +103,108 @@ public class MesaRepository : IMesaRepository
         return mesa?.Consumidores;
     }
 
+    public async Task<bool> AddPedidoAsync(int mesaId, int consumidorId, int produtoId, int quantidade)
+    {
+        var mesa = await _dbContext.Mesas!.Include(m => m.Consumidores)!
+            .ThenInclude(c => c.Pedidos)
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaId);
+
+        var consumidor = mesa?.Consumidores?.FirstOrDefault(c => c.Id == consumidorId);
+
+        var produto = await _dbContext.Produtos!.FindAsync(produtoId);
+
+        if (mesa == null || consumidor == null || produto == null)
+        {
+            return false;
+        }
+
+        var pedido = new PedidoEntity
+        {
+            ConsumidorId = consumidorId,
+            ProdutoId = produtoId,
+            Quantidade = quantidade
+        };
+
+        consumidor.TotalConsumido += produto.Preco * quantidade;
+        mesa.TotalConsumido += produto.Preco * quantidade;
+
+        consumidor.Pedidos?.Add(pedido);
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<ConsumoMesaDTO?> GetConsumoMesa(int mesaNumero)
+    {
+        var mesa = await _dbContext.Mesas!
+            .Include(m => m.Consumidores)!
+            .ThenInclude(c => c.Pedidos)!
+            .ThenInclude(p => p.Produto)
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+
+        if (mesa == null)
+        {
+            return null;
+        }
+
+        var consumoMesaDto = new ConsumoMesaDTO
+        {
+            MesaNumero = mesa.NumeroMesa!.Value,
+            TotalMesa = mesa.TotalConsumido,
+            Consumidores = new List<ConsumoIndividualDTO>()
+        };
+
+        foreach (var consumoIndividualDto in mesa.Consumidores!.Select(consumidor => new ConsumoIndividualDTO
+        {
+            ConsumidorId = consumidor.Id!.Value,
+            ConsumidorNome = consumidor.Nome,
+            TotalIndividual = consumidor.TotalConsumido,
+            ProdutosConsumidos = consumidor.Pedidos!.Select(p => new ProdutoDTO
+            {
+                Id = p.Produto!.Id,
+                Nome = p.Produto.Nome,
+                Preco = p.Produto.Preco,
+                Categoria = p.Produto.Categoria
+            }).ToList()
+        }))
+        {
+            consumoMesaDto.Consumidores.Add(consumoIndividualDto);
+        }
+
+        return consumoMesaDto;
+    }
+
+
+    public async Task<ConsumoIndividualDTO?> GetConsumoIndividual(int mesaNumero, int consumidorId)
+    {
+        var consumidor = await _dbContext.Consumidores!
+            .Include(c => c.Pedidos)!
+            .ThenInclude(p => p.Produto)
+            .Where(c => c.MesaId.HasValue && c.Mesa!.NumeroMesa == mesaNumero)
+            .FirstOrDefaultAsync(c => c.Id == consumidorId);
+
+        if (consumidor == null)
+        {
+            return null;
+        }
+
+        var consumoIndividualDto = new ConsumoIndividualDTO
+        {
+            ConsumidorId = consumidor.Id!.Value,
+            ConsumidorNome = consumidor.Nome,
+            TotalIndividual = consumidor.TotalConsumido,
+            ProdutosConsumidos = consumidor.Pedidos!.Select(p => new ProdutoDTO
+            {
+                Id = p.Produto!.Id,
+                Nome = p.Produto.Nome,
+                Preco = p.Produto.Preco,
+                Categoria = p.Produto.Categoria
+            }).ToList()
+        };
+
+        return consumoIndividualDto;
+    }
+
 }
+

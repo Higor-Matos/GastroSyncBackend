@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Domain.Response;
 using GastroSyncBackend.Repository.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
@@ -69,4 +70,21 @@ public class MesaService : IMesaService
         return new ServiceResponse<List<ConsumidorEntity>>(consumidores != null, "Operação concluída", consumidores);
     }
 
+    public async Task<ServiceResponse<bool>> AddPedidoAsync(int mesaId, int consumidorId, int produtoId, int quantidade)
+    {
+        var result = await _mesaRepository.AddPedidoAsync(mesaId, consumidorId, produtoId, quantidade);
+        return new ServiceResponse<bool>(result, "Operação concluída", result);
+    }
+
+    public async Task<ServiceResponse<ConsumoMesaDTO>> GetConsumoMesa(int mesaNumero)
+    {
+        var consumo = await _mesaRepository.GetConsumoMesa(mesaNumero);
+        return new ServiceResponse<ConsumoMesaDTO>(consumo != null, "Operação concluída", consumo);
+    }
+
+    public async Task<ServiceResponse<ConsumoIndividualDTO>> GetConsumoIndividual(int mesaNumero, int consumidorId)
+    {
+        var consumo = await _mesaRepository.GetConsumoIndividual(mesaNumero, consumidorId);
+        return new ServiceResponse<ConsumoIndividualDTO>(consumo != null, "Operação concluída", consumo);
+    }
 }
