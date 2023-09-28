@@ -92,5 +92,26 @@ public class MesaController : ControllerBase
         return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ConsumidorDTO>>(result.Data));
     }
 
+    [HttpPost("{mesaId:int}/consumidores/{consumidorId:int}/add-pedido")]
+    public async Task<IActionResult> AddPedido(int mesaId, int consumidorId, [FromBody] AddPedidoRequest request)
+    {
+        var result = await _mesaService.AddPedidoAsync(mesaId, consumidorId, request.ProdutoId, request.Quantidade);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
+    }
+
+
+    [HttpGet("{mesaNumero:int}/consumo-total")]
+    public async Task<IActionResult> GetConsumoMesa(int mesaNumero)
+    {
+        var result = await _mesaService.GetConsumoMesa(mesaNumero);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
+    }
+
+    [HttpGet("{mesaNumero:int}/consumidores/{consumidorId:int}/consumo-individual")]
+    public async Task<IActionResult> GetConsumoIndividual(int mesaNumero, int consumidorId)
+    {
+        var result = await _mesaService.GetConsumoIndividual(mesaNumero, consumidorId);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
+    }
 
 }

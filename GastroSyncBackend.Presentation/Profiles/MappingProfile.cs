@@ -11,6 +11,6 @@ public class MappingProfile : Profile
         CreateMap<MesaEntity, MesaDTO>();
         CreateMap<ConsumidorEntity, ConsumidorDTO>();
         CreateMap<ProdutoEntity, ProdutoDTO>();
+        CreateMap<PedidoEntity, PedidoDTO>();
     }
 }
-

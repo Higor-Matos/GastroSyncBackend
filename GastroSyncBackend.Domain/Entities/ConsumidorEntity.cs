@@ -10,5 +10,6 @@ public class ConsumidorEntity
     public int? MesaId { get; set; }
     public MesaEntity? Mesa { get; set; }
     public decimal TotalConsumido { get; set; } = 0;
+    public List<PedidoEntity>? Pedidos { get; set; }
 
 }
