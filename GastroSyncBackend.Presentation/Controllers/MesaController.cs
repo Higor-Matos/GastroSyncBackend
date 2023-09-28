@@ -37,6 +37,26 @@ public class MesaController : ControllerBase
         return this.ApiResponse(result.Success, result.Message, result.Data != null ? _mapper.Map<MesaDTO>(result.Data) : null);
     }
 
+    [HttpGet("{mesaNumero:int}/ObterConsumidoresMesa")]
+    public async Task<IActionResult> ObterConsumidoresMesa(int mesaNumero)
+    {
+        var result = await _mesaService.ObterConsumidoresMesa(mesaNumero);
+        return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ConsumidorDTO>>(result.Data));
+    }
+
+    [HttpGet("{mesaNumero:int}/ConsumoTotalMesa")]
+    public async Task<IActionResult> ObterConsumoTotalMesa(int mesaNumero)
+    {
+        var result = await _mesaService.ObterConsumoTotalMesa(mesaNumero);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
+    }
+
+    [HttpGet("{mesaNumero:int}/Consumidores/{consumidorId:int}/ConsumoIndividual")]
+    public async Task<IActionResult> ObterConsumoTotalIndividual(int mesaNumero, int consumidorId)
+    {
+        var result = await _mesaService.ObterConsumoTotalMesa(mesaNumero, consumidorId);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
+    }
 
 
     [HttpDelete("RemoveMesaPeloNumero/{mesaNumber:int}")]
@@ -85,32 +105,12 @@ public class MesaController : ControllerBase
         }
     }
 
-    [HttpGet("{mesaNumero:int}/ObterConsumidoresMesa")]
-    public async Task<IActionResult> ObterConsumidoresMesa(int mesaNumero)
-    {
-        var result = await _mesaService.ObterConsumidoresMesa(mesaNumero);
-        return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ConsumidorDTO>>(result.Data));
-    }
-
-    [HttpPost("{mesaId:int}/consumidores/{consumidorId:int}/add-pedido")]
-    public async Task<IActionResult> AddPedido(int mesaId, int consumidorId, [FromBody] AddPedidoRequest request)
-    {
-        var result = await _mesaService.AddPedidoAsync(mesaId, consumidorId, request.ProdutoId, request.Quantidade);
-        return this.ApiResponse(result.Success, result.Message, result.Data);
-    }
 
 
-    [HttpGet("{mesaNumero:int}/consumo-total")]
-    public async Task<IActionResult> GetConsumoMesa(int mesaNumero)
+    [HttpPost("{mesaId:int}/Consumidores/{consumidorId:int}/AdicionarPedidoConsumidorMesa")]
+    public async Task<IActionResult> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, [FromBody] AddPedidoRequest request)
     {
-        var result = await _mesaService.GetConsumoMesa(mesaNumero);
-        return this.ApiResponse(result.Success, result.Message, result.Data);
-    }
-
-    [HttpGet("{mesaNumero:int}/consumidores/{consumidorId:int}/consumo-individual")]
-    public async Task<IActionResult> GetConsumoIndividual(int mesaNumero, int consumidorId)
-    {
-        var result = await _mesaService.GetConsumoIndividual(mesaNumero, consumidorId);
+        var result = await _mesaService.AdicionarPedidoConsumidorMesa(mesaId, consumidorId, request.ProdutoId, request.Quantidade);
         return this.ApiResponse(result.Success, result.Message, result.Data);
     }
 
