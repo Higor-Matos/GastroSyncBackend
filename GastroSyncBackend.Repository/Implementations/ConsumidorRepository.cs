@@ -10,10 +10,7 @@ public class ConsumidorRepository : IConsumidorRepository
 {
     private readonly IAppDbContext _dbContext;
 
-    public ConsumidorRepository(IAppDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    public ConsumidorRepository(IAppDbContext dbContext) => _dbContext = dbContext;
 
     public async Task<bool> AdicionarConsumidoresMesa(int mesaId, List<string> consumidores)
     {
@@ -41,32 +38,29 @@ public class ConsumidorRepository : IConsumidorRepository
             .Where(c => c.MesaId.HasValue && c.Mesa!.NumeroMesa == mesaNumero)
             .FirstOrDefaultAsync(c => c.Id == consumidorId);
 
-        if (consumidor == null)
+        if (consumidor == null) return null;
         {
-            return null;
+            var consumoIndividualDto = new ConsumoIndividualDTO
+            {
+                ConsumidorId = consumidor.Id!.Value,
+                ConsumidorNome = consumidor.Nome,
+                TotalIndividual = consumidor.TotalConsumido,
+                ProdutosConsumidos = consumidor.Pedidos!.Select(p => new ProdutoDTO
+                {
+                    Id = p.Produto!.Id,
+                    Nome = p.Produto.Nome,
+                    Preco = p.Produto.Preco,
+                    Categoria = p.Produto.Categoria
+                }).ToList()
+            };
+
+            return consumoIndividualDto;
         }
 
-        var consumoIndividualDto = new ConsumoIndividualDTO
-        {
-            ConsumidorId = consumidor.Id!.Value,
-            ConsumidorNome = consumidor.Nome,
-            TotalIndividual = consumidor.TotalConsumido,
-            ProdutosConsumidos = consumidor.Pedidos!.Select(p => new ProdutoDTO
-            {
-                Id = p.Produto!.Id,
-                Nome = p.Produto.Nome,
-                Preco = p.Produto.Preco,
-                Categoria = p.Produto.Categoria
-            }).ToList()
-        };
-
-        return consumoIndividualDto;
     }
 
-    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero)
-    {
-        return await _dbContext.Mesas!
+    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero) =>
+        await _dbContext.Mesas!
             .Include(m => m.Consumidores)
             .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
-    }
 }

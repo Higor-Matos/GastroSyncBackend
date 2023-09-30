@@ -9,10 +9,7 @@ public class PedidoRepository : IPedidoRepository
 {
     private readonly IAppDbContext _dbContext;
 
-    public PedidoRepository(IAppDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    public PedidoRepository(IAppDbContext dbContext) => _dbContext = dbContext;
 
     public async Task<bool> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
@@ -20,11 +17,7 @@ public class PedidoRepository : IPedidoRepository
         var consumidor = mesa?.Consumidores?.FirstOrDefault(c => c.Id == consumidorId);
         var produto = await _dbContext.Produtos!.FindAsync(produtoId);
 
-        if (mesa == null || consumidor == null || produto == null)
-        {
-            return false;
-        }
-
+        if (mesa == null || consumidor == null || produto == null) return false;
         var pedido = CreatePedido(consumidorId, produtoId, quantidade);
         UpdateTotalConsumido(consumidor, mesa, produto.Preco, quantidade);
 
@@ -33,15 +26,14 @@ public class PedidoRepository : IPedidoRepository
         await _dbContext.SaveChangesAsync();
 
         return true;
+
     }
 
-    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero)
-    {
-        return await _dbContext.Mesas!
+    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero) =>
+        await _dbContext.Mesas!
             .Include(m => m.Consumidores)!
             .ThenInclude(c => c.Pedidos)
             .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
-    }
 
     private PedidoEntity CreatePedido(int consumidorId, int produtoId, int quantidade)
     {
