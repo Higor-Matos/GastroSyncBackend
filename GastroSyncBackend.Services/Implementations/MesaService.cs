@@ -10,21 +10,15 @@ public class MesaService : IMesaService
 {
     private readonly IMesaRepository _mesaRepository;
 
-    public MesaService(IMesaRepository mesaRepository)
-    {
-        _mesaRepository = mesaRepository;
-    }
+    public MesaService(IMesaRepository mesaRepository) => _mesaRepository = mesaRepository;
 
     public async Task<ServiceResponse<MesaEntity>> CriarMesa(int numeroMesa, string local)
     {
         var mesaExistente = await ObterMesaPorNumero(numeroMesa);
-        if (mesaExistente.Success)
-        {
-            return new ServiceResponse<MesaEntity>(false, "Operação concluída");
-        }
-
+        if (mesaExistente.Success) return new ServiceResponse<MesaEntity>(false, "Operação concluída");
         var mesa = await _mesaRepository.CriarMesa(numeroMesa, local);
         return new ServiceResponse<MesaEntity>(true, "Operação concluída", mesa);
+
     }
 
     public async Task<ServiceResponse<bool>> RemoveMesaPeloNumero(int mesaNumber)

@@ -12,19 +12,11 @@ public class AppDbContext : AppDbContextBase, IAppDbContext
     {
     }
 
-    public new async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        await base.SaveChangesAsync(cancellationToken);
-    }
-    public async Task EnsureDatabaseCreatedAsync()
-    {
-        await Database.EnsureCreatedAsync();
-    }
+    public new async Task SaveChangesAsync(CancellationToken cancellationToken = default) => await base.SaveChangesAsync(cancellationToken);
 
-    public async Task DatabaseMigrateAsync()
-    {
-        await Database.MigrateAsync();
-    }
+    public async Task EnsureDatabaseCreatedAsync() => await Database.EnsureCreatedAsync();
+
+    public async Task DatabaseMigrateAsync() => await Database.MigrateAsync();
 
     public DbSet<MesaEntity>? Mesas { get; set; }
     public new DatabaseFacade Database => base.Database;

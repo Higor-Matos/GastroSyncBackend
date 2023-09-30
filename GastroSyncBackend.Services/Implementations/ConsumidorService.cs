@@ -10,10 +10,8 @@ public class ConsumidorService : IConsumidorService
 {
     private readonly IConsumidorRepository _consumidorRepository;
 
-    public ConsumidorService(IConsumidorRepository consumidorRepository)
-    {
-        _consumidorRepository = consumidorRepository;
-    }
+    public ConsumidorService(IConsumidorRepository consumidorRepository) => _consumidorRepository = consumidorRepository;
+
     public async Task<ServiceResponse<bool>> AdicionarConsumidoresMesa(int mesaId, List<string> consumidores)
     {
         var result = await _consumidorRepository.AdicionarConsumidoresMesa(mesaId, consumidores);
