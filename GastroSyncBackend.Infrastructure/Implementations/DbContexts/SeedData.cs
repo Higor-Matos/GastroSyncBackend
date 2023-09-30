@@ -5,8 +5,7 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts;
 
 public static class SeedData
 {
-    public static void Seed(ModelBuilder modelBuilder)
-    {
+    public static void Seed(ModelBuilder modelBuilder) =>
         modelBuilder.Entity<ProdutoEntity>().HasData(
             new ProdutoEntity { Id = 1, Nome = "Pizza", Preco = 50.5M, Categoria = "Comida" },
             new ProdutoEntity { Id = 2, Nome = "Sushi", Preco = 70, Categoria = "Comida" },
@@ -18,5 +17,4 @@ public static class SeedData
             new ProdutoEntity { Id = 8, Nome = "Cerveja", Preco = 15M, Categoria = "Bebida" },
             new ProdutoEntity { Id = 100, Nome = "Cover", Preco = 15M, Categoria = "Cover" }
         );
-    }
 }

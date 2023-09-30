@@ -9,10 +9,7 @@ public class PedidoService : IPedidoService
 
     private readonly IPedidoRepository _pedidoRepository;
 
-    public PedidoService(IPedidoRepository pedidoRepository)
-    {
-        _pedidoRepository = pedidoRepository;
-    }
+    public PedidoService(IPedidoRepository pedidoRepository) => _pedidoRepository = pedidoRepository;
 
     public async Task<ServiceResponse<bool>> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
