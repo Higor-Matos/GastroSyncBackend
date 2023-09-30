@@ -29,20 +29,15 @@ public class MesaRepository : IMesaRepository
         return await _dbContext.Mesas!.Include(m => m.Consumidores).ToListAsync();
     }
 
-
     public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa)
     {
-        return await _dbContext.Mesas!
-            .Where(m => m.NumeroMesa == numeroMesa)
-            .Include(m => m.Consumidores)
-            .FirstOrDefaultAsync();
+        return await GetMesaByNumeroAsync(numeroMesa);
     }
 
 
     public async Task<bool> RemoveMesaPeloNumero(int mesaNumber)
     {
-        var mesa = await _dbContext.Mesas!.Include(m => m.Consumidores)
-            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumber);
+        var mesa = await GetMesaByNumeroAsync(mesaNumber);
         if (mesa == null)
         {
             return false;
@@ -54,42 +49,33 @@ public class MesaRepository : IMesaRepository
         return true;
     }
 
-
     public async Task<bool> RemoveTodasMesasEReiniciaId()
     {
-        var mesas = await _dbContext.Mesas!.ToListAsync();
-        if (!mesas.Any())
+        var hasMesas = await _dbContext.Mesas!.AnyAsync();
+        if (!hasMesas)
         {
             return false;
         }
 
         _dbContext.Consumidores!.RemoveRange(_dbContext.Consumidores);
-        _dbContext.Mesas!.RemoveRange(mesas);
+        _dbContext.Mesas!.RemoveRange(_dbContext.Mesas);
         await _dbContext.SaveChangesAsync();
 
-        // Redefine o contador de identidade para Mesas
-        var mesaEntityType = _dbContext.Model.FindEntityType(typeof(MesaEntity));
-        var mesaTableName = mesaEntityType!.GetTableName();
-        var mesaSql = $"DBCC CHECKIDENT ('{mesaTableName}', RESEED, 0)";
-        _dbContext.Database.ExecuteSqlRaw(mesaSql);
-
-        // Redefine o contador de identidade para Consumidores
-        var consumidorEntityType = _dbContext.Model.FindEntityType(typeof(ConsumidorEntity));
-        var consumidorTableName = consumidorEntityType!.GetTableName();
-        var consumidorSql = $"DBCC CHECKIDENT ('{consumidorTableName}', RESEED, 0)";
-        _dbContext.Database.ExecuteSqlRaw(consumidorSql);
+        ResetIdentityCounter(typeof(MesaEntity));
+        ResetIdentityCounter(typeof(ConsumidorEntity));
 
         return true;
+    }
+    private void ResetIdentityCounter(Type entityType)
+    {
+        var tableName = _dbContext.Model.FindEntityType(entityType)!.GetTableName();
+        var sql = $"DBCC CHECKIDENT ('{tableName}', RESEED, 0)";
+        _dbContext.Database.ExecuteSqlRaw(sql);
     }
 
     public async Task<ConsumoMesaDTO?> ObterConsumoTotalMesa(int mesaNumero)
     {
-        var mesa = await _dbContext.Mesas!
-            .Include(m => m.Consumidores)!
-            .ThenInclude(c => c.Pedidos)!
-            .ThenInclude(p => p.Produto)
-            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
-
+        var mesa = await GetMesaByNumeroAsync(mesaNumero);
         if (mesa == null)
         {
             return null;
@@ -99,27 +85,48 @@ public class MesaRepository : IMesaRepository
         {
             MesaNumero = mesa.NumeroMesa!.Value,
             TotalMesa = mesa.TotalConsumido,
-            Consumidores = new List<ConsumoIndividualDTO>()
+            Consumidores = GetConsumoIndividual(mesa)
         };
 
-        foreach (var consumoIndividualDto in mesa.Consumidores!.Select(consumidor => new ConsumoIndividualDTO
+        return consumoMesaDto;
+    }
+
+    private List<ConsumoIndividualDTO> GetConsumoIndividual(MesaEntity mesa)
+    {
+        if (mesa.Consumidores == null)
         {
-            ConsumidorId = consumidor.Id!.Value,
-            ConsumidorNome = consumidor.Nome,
-            TotalIndividual = consumidor.TotalConsumido,
-            ProdutosConsumidos = consumidor.Pedidos!.Select(p => new ProdutoDTO
-            {
-                Id = p.Produto!.Id,
-                Nome = p.Produto.Nome,
-                Preco = p.Produto.Preco,
-                Categoria = p.Produto.Categoria
-            }).ToList()
-        }))
-        {
-            consumoMesaDto.Consumidores.Add(consumoIndividualDto);
+            return new List<ConsumoIndividualDTO>();
         }
 
-        return consumoMesaDto;
+        return mesa.Consumidores.Select(consumidor =>
+        {
+            var produtosConsumidos = consumidor.Pedidos == null
+                ? new List<ProdutoDTO>()
+                : consumidor.Pedidos.Select(p => new ProdutoDTO
+                {
+                    Id = p.Produto!.Id,
+                    Nome = p.Produto.Nome,
+                    Preco = p.Produto.Preco,
+                    Categoria = p.Produto.Categoria
+                }).ToList();
+
+            return new ConsumoIndividualDTO
+            {
+                ConsumidorId = consumidor.Id!.Value,
+                ConsumidorNome = consumidor.Nome,
+                TotalIndividual = consumidor.TotalConsumido,
+                ProdutosConsumidos = produtosConsumidos
+            };
+        }).ToList();
+    }
+
+
+
+    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero)
+    {
+        return await _dbContext.Mesas!
+            .Include(m => m.Consumidores)
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
     }
 }
 

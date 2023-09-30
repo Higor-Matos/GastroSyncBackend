@@ -1,12 +1,7 @@
 ﻿using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GastroSyncBackend.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GastroSyncBackend.Repository.Implementations;
 

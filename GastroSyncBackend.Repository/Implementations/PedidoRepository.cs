@@ -14,15 +14,10 @@ public class PedidoRepository : IPedidoRepository
         _dbContext = dbContext;
     }
 
-
     public async Task<bool> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
-        var mesa = await _dbContext.Mesas!.Include(m => m.Consumidores)!
-            .ThenInclude(c => c.Pedidos)
-            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaId);
-
+        var mesa = await GetMesaByNumeroAsync(mesaId);
         var consumidor = mesa?.Consumidores?.FirstOrDefault(c => c.Id == consumidorId);
-
         var produto = await _dbContext.Produtos!.FindAsync(produtoId);
 
         if (mesa == null || consumidor == null || produto == null)
@@ -30,15 +25,8 @@ public class PedidoRepository : IPedidoRepository
             return false;
         }
 
-        var pedido = new PedidoEntity
-        {
-            ConsumidorId = consumidorId,
-            ProdutoId = produtoId,
-            Quantidade = quantidade
-        };
-
-        consumidor.TotalConsumido += produto.Preco * quantidade;
-        mesa.TotalConsumido += produto.Preco * quantidade;
+        var pedido = CreatePedido(consumidorId, produtoId, quantidade);
+        UpdateTotalConsumido(consumidor, mesa, produto.Preco, quantidade);
 
         consumidor.Pedidos?.Add(pedido);
 
@@ -47,4 +35,28 @@ public class PedidoRepository : IPedidoRepository
         return true;
     }
 
+    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero)
+    {
+        return await _dbContext.Mesas!
+            .Include(m => m.Consumidores)!
+            .ThenInclude(c => c.Pedidos)
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+    }
+
+    private PedidoEntity CreatePedido(int consumidorId, int produtoId, int quantidade)
+    {
+        return new PedidoEntity
+        {
+            ConsumidorId = consumidorId,
+            ProdutoId = produtoId,
+            Quantidade = quantidade
+        };
+    }
+
+    private void UpdateTotalConsumido(ConsumidorEntity consumidor, MesaEntity mesa, decimal precoProduto, int quantidade)
+    {
+        var total = precoProduto * quantidade;
+        consumidor.TotalConsumido += total;
+        mesa.TotalConsumido += total;
+    }
 }
