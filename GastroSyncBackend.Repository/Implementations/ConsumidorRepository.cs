@@ -17,7 +17,7 @@ public class ConsumidorRepository : IConsumidorRepository
 
     public async Task<bool> AdicionarConsumidoresMesa(int mesaId, List<string> consumidores)
     {
-        var mesa = await _dbContext.Mesas!.FirstOrDefaultAsync(m => m.NumeroMesa == mesaId);
+        var mesa = await GetMesaByNumeroAsync(mesaId);
         if (mesa == null) return false;
 
         var consumidorEntities = consumidores.Select(nome => new ConsumidorEntity { Nome = nome, MesaId = mesaId }).ToList();
@@ -29,8 +29,7 @@ public class ConsumidorRepository : IConsumidorRepository
 
     public async Task<List<ConsumidorEntity>?> ObterConsumidoresMesa(int mesaNumero)
     {
-        var mesa = await _dbContext.Mesas!.Include(m => m.Consumidores)
-            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+        var mesa = await GetMesaByNumeroAsync(mesaNumero);
         return mesa?.Consumidores;
     }
 
@@ -62,5 +61,12 @@ public class ConsumidorRepository : IConsumidorRepository
         };
 
         return consumoIndividualDto;
+    }
+
+    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero)
+    {
+        return await _dbContext.Mesas!
+            .Include(m => m.Consumidores)
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
     }
 }
