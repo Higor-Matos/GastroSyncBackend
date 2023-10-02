@@ -70,21 +70,25 @@ public class MesaRepository : IMesaRepository
         return consumoMesaDto;
 
     }
-
     private static List<ConsumoIndividualDTO> GetConsumoIndividual(MesaEntity mesa)
     {
         return mesa.Consumidores == null
             ? new List<ConsumoIndividualDTO>()
             : mesa.Consumidores.Select(consumidor =>
             {
-                var produtosConsumidos = consumidor.Pedidos == null
-                    ? new List<ProdutoDTO>()
-                    : consumidor.Pedidos.Select(p => new ProdutoDTO
+                var pedidosConsumidos = consumidor.Pedidos == null
+                    ? new List<PedidoDTO>()
+                    : consumidor.Pedidos.Select(p => new PedidoDTO
                     {
-                        Id = p.Produto!.Id,
-                        Nome = p.Produto.Nome,
-                        Preco = p.Produto.Preco,
-                        Categoria = p.Produto.Categoria
+                        Id = p.Id,
+                        ConsumidorId = p.ConsumidorId,
+                        ProdutoId = p.ProdutoId,
+                        Quantidade = p.Quantidade,
+                        Divisoes = p.Divisoes!.Select(d => new DivisaoProdutoDTO
+                        {
+                            ConsumidorId = consumidor.Id ?? 0,
+                            ValorDividido = d.ValorDividido
+                        }).ToList()
                     }).ToList();
 
                 return new ConsumoIndividualDTO
@@ -92,10 +96,11 @@ public class MesaRepository : IMesaRepository
                     ConsumidorId = consumidor.Id!.Value,
                     ConsumidorNome = consumidor.Nome,
                     TotalIndividual = consumidor.TotalConsumido,
-                    ProdutosConsumidos = produtosConsumidos
+                    PedidosConsumidos = pedidosConsumidos
                 };
             }).ToList();
     }
+
 
 
     private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero) =>

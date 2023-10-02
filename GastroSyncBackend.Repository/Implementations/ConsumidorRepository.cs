@@ -35,6 +35,8 @@ public class ConsumidorRepository : IConsumidorRepository
         var consumidor = await _dbContext.Consumidores!
             .Include(c => c.Pedidos)!
             .ThenInclude(p => p.Produto)
+            .Include(c => c.Pedidos)!
+            .ThenInclude(p => p.Divisoes)
             .Where(c => c.MesaId.HasValue && c.Mesa!.NumeroMesa == mesaNumero)
             .FirstOrDefaultAsync(c => c.Id == consumidorId);
 
@@ -45,14 +47,20 @@ public class ConsumidorRepository : IConsumidorRepository
                 ConsumidorId = consumidor.Id!.Value,
                 ConsumidorNome = consumidor.Nome,
                 TotalIndividual = consumidor.TotalConsumido,
-                ProdutosConsumidos = consumidor.Pedidos!.Select(p => new ProdutoDTO
+                PedidosConsumidos = consumidor.Pedidos!.Select(p => new PedidoDTO
                 {
-                    Id = p.Produto!.Id,
-                    Nome = p.Produto.Nome,
-                    Preco = p.Produto.Preco,
-                    Categoria = p.Produto.Categoria
+                    Id = p.Id,
+                    ConsumidorId = p.ConsumidorId,
+                    ProdutoId = p.ProdutoId,
+                    Quantidade = p.Quantidade,
+                    Divisoes = p.Divisoes!.Select(d => new DivisaoProdutoDTO
+                    {
+                        ConsumidorId = consumidor.Id ?? 0,
+                        ValorDividido = d.ValorDividido
+                    }).ToList()
                 }).ToList()
             };
+
 
             return consumoIndividualDto;
         }

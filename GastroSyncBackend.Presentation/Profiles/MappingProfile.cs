@@ -11,6 +11,8 @@ public class MappingProfile : Profile
         CreateMap<MesaEntity, MesaDTO>();
         CreateMap<ConsumidorEntity, ConsumidorDTO>();
         CreateMap<ProdutoEntity, ProdutoDTO>();
-        CreateMap<PedidoEntity, PedidoDTO>();
+        CreateMap<PedidoEntity, PedidoDTO>()
+            .ForMember(dest => dest.Divisoes, opt => opt.MapFrom(src => src.Divisoes)); 
+        CreateMap<DivisaoProdutoEntity, DivisaoProdutoDTO>();
     }
 }
