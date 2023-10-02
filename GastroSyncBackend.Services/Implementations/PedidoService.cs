@@ -16,4 +16,11 @@ public class PedidoService : IPedidoService
         var result = await _pedidoRepository.AdicionarPedidoConsumidorMesa(mesaId, consumidorId, produtoId, quantidade);
         return new ServiceResponse<bool>(result, "Operação concluída", result);
     }
+
+    public async Task<ServiceResponse<bool>> AdicionarPedidoDividido(int mesaId, int[] consumidoresIds, int produtoId, int quantidade)
+    {
+        var result = await _pedidoRepository.AdicionarPedidoDividido(mesaId, consumidoresIds, produtoId, quantidade);
+        return new ServiceResponse<bool>(result, "Operação concluída", result);
+    }
+
 }
