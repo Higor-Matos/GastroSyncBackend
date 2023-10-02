@@ -11,7 +11,7 @@ public class PedidoRepository : IPedidoRepository
 
     public PedidoRepository(IAppDbContext dbContext) => _dbContext = dbContext;
 
-    public async Task<bool> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
+    public async Task<bool> AdicionarPedidoIndividual(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
         var mesa = await GetMesaByNumeroAsync(mesaId);
         var consumidor = mesa?.Consumidores?.FirstOrDefault(c => c.Id == consumidorId);

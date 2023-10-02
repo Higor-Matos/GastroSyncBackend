@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using GastroSyncBackend.Domain.DTOs;
-using GastroSyncBackend.Domain.Request;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,7 @@ public class ProdutoController : ControllerBase
     [HttpGet("RecuperarTodosProdutos")]
     public async Task<IActionResult> ObterTodosOsProdutos()
     {
-        var result = await _produtoService.GetProdutosAsync();
+        var result = await _produtoService.ObterTodosOsProdutos();
         return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ProdutoDTO>>(result.Data));
     }
 }

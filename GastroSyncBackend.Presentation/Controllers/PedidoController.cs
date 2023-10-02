@@ -7,7 +7,7 @@ namespace GastroSyncBackend.Presentation.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/{mesaId:int}")]
 public class PedidoController : ControllerBase
 {
     private readonly IPedidoService _pedidoService;
@@ -17,15 +17,15 @@ public class PedidoController : ControllerBase
         _pedidoService = pedidoService;
     }
 
-    [HttpPost("{mesaId:int}/Consumidores/{consumidorId:int}/AdicionarPedidoConsumidorMesa")]
-    public async Task<IActionResult> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, [FromBody] AddPedidoRequest request)
+    [HttpPost("Consumidores/{consumidorId:int}")]
+    public async Task<IActionResult> Add(int mesaId, int consumidorId, [FromBody] AddPedidoRequest request)
     {
-        var result = await _pedidoService.AdicionarPedidoConsumidorMesa(mesaId, consumidorId, request.ProdutoId, request.Quantidade);
+        var result = await _pedidoService.AdicionarPedidoIndividual(mesaId, consumidorId, request.ProdutoId, request.Quantidade);
         return this.ApiResponse(result.Success, result.Message, result.Data);
     }
 
-    [HttpPost("{mesaId:int}/AdicionarPedidoDividido")]
-    public async Task<IActionResult> AdicionarPedidoDividido(int mesaId, [FromBody] AddPedidoDivididoRequest request)
+    [HttpPost("Dividido")]
+    public async Task<IActionResult> AddDividido(int mesaId, [FromBody] AddPedidoDivididoRequest request)
     {
         var result = await _pedidoService.AdicionarPedidoDividido(mesaId, request.ConsumidoresIds, request.ProdutoId, request.Quantidade);
         return this.ApiResponse(result.Success, result.Message, result.Data);
