@@ -7,6 +7,5 @@ namespace GastroSyncBackend.Services.Interfaces;
 [AutoDI]
 public interface IProdutoService
 {
-    Task<ServiceResponse<List<ProdutoEntity>>> GetProdutosByCategoriaAsync(string categoria);
     Task<ServiceResponse<List<ProdutoEntity>>> GetProdutosAsync();
 }

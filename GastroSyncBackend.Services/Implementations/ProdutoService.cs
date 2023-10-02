@@ -17,12 +17,4 @@ public class ProdutoService : IProdutoService
         var produtos = await _produtoRepository.GetProdutosAsync();
         return new ServiceResponse<List<ProdutoEntity>>(true, "Operação concluída", produtos);
     }
-
-    public async Task<ServiceResponse<List<ProdutoEntity>>> GetProdutosByCategoriaAsync(string categoria)
-    {
-        var produtos = await _produtoRepository.GetProdutosByCategoriaAsync(categoria);
-        return new ServiceResponse<List<ProdutoEntity>>(true, "Operação concluída", produtos);
-    }
-
-
 }

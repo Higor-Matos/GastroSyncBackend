@@ -7,6 +7,4 @@ namespace GastroSyncBackend.Repository.Interfaces;
 public interface IProdutoRepository
 {
     Task<List<ProdutoEntity>> GetProdutosAsync();
-
-    Task<List<ProdutoEntity>> GetProdutosByCategoriaAsync(string categoria);
 }
