@@ -20,13 +20,10 @@ public class MesaRepository : IMesaRepository
         return mesa;
     }
 
-    public async Task<IEnumerable<MesaEntity>> ObterTodasAsMesas() => await _dbContext.Mesas!.Include(m => m.Consumidores).ToListAsync();
-
-    public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa) => await GetMesaByNumeroAsync(numeroMesa);
 
     public async Task<bool> RemoveMesaPeloNumero(int mesaNumber)
     {
-        var mesa = await GetMesaByNumeroAsync(mesaNumber);
+        var mesa = await ObterMesaPorNumero(mesaNumber);
         if (mesa == null) return false;
         _dbContext.Consumidores!.RemoveRange(mesa.Consumidores!);
         _dbContext.Mesas!.Remove(mesa);
@@ -49,6 +46,7 @@ public class MesaRepository : IMesaRepository
         return true;
 
     }
+
     private void ResetarContadorID(Type entityType)
     {
         var tableName = _dbContext.Model.FindEntityType(entityType)!.GetTableName();
@@ -56,56 +54,14 @@ public class MesaRepository : IMesaRepository
         _dbContext.Database.ExecuteSqlRaw(sql);
     }
 
-    public async Task<ConsumoMesaDTO?> ObterConsumoTotalMesa(int mesaNumero)
-    {
-        var mesa = await GetMesaByNumeroAsync(mesaNumero);
-        if (mesa == null) return null;
-        var consumoMesaDto = new ConsumoMesaDTO
-        {
-            MesaNumero = mesa.NumeroMesa!.Value,
-            TotalMesa = mesa.TotalConsumido,
-            Consumidores = GetConsumoIndividual(mesa)
-        };
+    private IQueryable<MesaEntity> IncludeConsumidores() =>
+        _dbContext.Mesas!.Include(m => m.Consumidores);
 
-        return consumoMesaDto;
+    public async Task<IEnumerable<MesaEntity>> ObterTodasAsMesas() =>
+        await IncludeConsumidores().ToListAsync();
 
-    }
-    private static List<ConsumoIndividualDTO> GetConsumoIndividual(MesaEntity mesa)
-    {
-        return mesa.Consumidores == null
-            ? new List<ConsumoIndividualDTO>()
-            : mesa.Consumidores.Select(consumidor =>
-            {
-                var pedidosConsumidos = consumidor.Pedidos == null
-                    ? new List<PedidoDTO>()
-                    : consumidor.Pedidos.Select(p => new PedidoDTO
-                    {
-                        Id = p.Id,
-                        ConsumidorId = p.ConsumidorId,
-                        ProdutoId = p.ProdutoId,
-                        Quantidade = p.Quantidade,
-                        Divisoes = p.Divisoes!.Select(d => new DivisaoProdutoDTO
-                        {
-                            ConsumidorId = consumidor.Id ?? 0,
-                            ValorDividido = d.ValorDividido
-                        }).ToList()
-                    }).ToList();
-
-                return new ConsumoIndividualDTO
-                {
-                    ConsumidorId = consumidor.Id!.Value,
-                    ConsumidorNome = consumidor.Nome,
-                    TotalIndividual = consumidor.TotalConsumido,
-                    PedidosConsumidos = pedidosConsumidos
-                };
-            }).ToList();
-    }
-
-
-
-    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero) =>
-        await _dbContext.Mesas!
-            .Include(m => m.Consumidores)
-            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+    public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa) =>
+        await IncludeConsumidores()
+            .FirstOrDefaultAsync(m => m.NumeroMesa == numeroMesa);
 }
 

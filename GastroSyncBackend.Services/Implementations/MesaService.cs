@@ -48,9 +48,4 @@ public class MesaService : IMesaService
         return new ServiceResponse<MesaEntity>(mesa != null, "Operação concluída", mesa);
     }
     
-    public async Task<ServiceResponse<ConsumoMesaDTO>> ObterConsumoTotalMesa(int mesaNumero)
-    {
-        var consumo = await _mesaRepository.ObterConsumoTotalMesa(mesaNumero);
-        return new ServiceResponse<ConsumoMesaDTO>(consumo != null, "Operação concluída", consumo);
-    }
 }
