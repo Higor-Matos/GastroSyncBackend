@@ -43,13 +43,13 @@ public class MesaRepository : IMesaRepository
         _dbContext.Mesas!.RemoveRange(_dbContext.Mesas);
         await _dbContext.SaveChangesAsync();
 
-        ResetIdentityCounter(typeof(MesaEntity));
-        ResetIdentityCounter(typeof(ConsumidorEntity));
+        ResetarContadorID(typeof(MesaEntity));
+        ResetarContadorID(typeof(ConsumidorEntity));
 
         return true;
 
     }
-    private void ResetIdentityCounter(Type entityType)
+    private void ResetarContadorID(Type entityType)
     {
         var tableName = _dbContext.Model.FindEntityType(entityType)!.GetTableName();
         var sql = $"DBCC CHECKIDENT ('{tableName}', RESEED, 0)";
@@ -71,7 +71,7 @@ public class MesaRepository : IMesaRepository
 
     }
 
-    private List<ConsumoIndividualDTO> GetConsumoIndividual(MesaEntity mesa)
+    private static List<ConsumoIndividualDTO> GetConsumoIndividual(MesaEntity mesa)
     {
         return mesa.Consumidores == null
             ? new List<ConsumoIndividualDTO>()

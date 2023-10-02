@@ -11,4 +11,5 @@ public class PedidoEntity
     public int ProdutoId { get; set; }
     public ProdutoEntity? Produto { get; set; }
     public int Quantidade { get; set; }
+    public List<DivisaoProdutoEntity>? Divisoes { get; set; }
 }

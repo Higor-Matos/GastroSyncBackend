@@ -23,4 +23,12 @@ public class PedidoController : ControllerBase
         var result = await _pedidoService.AdicionarPedidoConsumidorMesa(mesaId, consumidorId, request.ProdutoId, request.Quantidade);
         return this.ApiResponse(result.Success, result.Message, result.Data);
     }
+
+    [HttpPost("{mesaId:int}/AdicionarPedidoDividido")]
+    public async Task<IActionResult> AdicionarPedidoDividido(int mesaId, [FromBody] AddPedidoDivididoRequest request)
+    {
+        var result = await _pedidoService.AdicionarPedidoDividido(mesaId, request.ConsumidoresIds, request.ProdutoId, request.Quantidade);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
+    }
+
 }
