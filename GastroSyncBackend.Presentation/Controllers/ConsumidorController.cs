@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using GastroSyncBackend.Domain.DTOs;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,20 +18,6 @@ public class ConsumidorController : ControllerBase
     {
         _consumidorService = consumidorService;
         _mapper = mapper;
-    }
-
-    [HttpGet("{mesaNumero:int}/ObterConsumidoresMesa")]
-    public async Task<IActionResult> ObterConsumidoresMesa(int mesaNumero)
-    {
-        var result = await _consumidorService.ObterConsumidoresMesa(mesaNumero);
-        return this.ApiResponse(result.Success, result.Message, _mapper.Map<List<ConsumidorDTO>>(result.Data));
-    }
-
-    [HttpGet("{mesaNumero:int}/Consumidores/{consumidorId:int}/ConsumoIndividual")]
-    public async Task<IActionResult> ObterConsumoIndividualMesa(int mesaNumero, int consumidorId)
-    {
-        var result = await _consumidorService.ObterConsumoIndividualMesa(mesaNumero, consumidorId);
-        return this.ApiResponse(result.Success, result.Message, result.Data);
     }
 
     [HttpPost("{mesaId:int}/AdicionarConsumidoresMesa")]
