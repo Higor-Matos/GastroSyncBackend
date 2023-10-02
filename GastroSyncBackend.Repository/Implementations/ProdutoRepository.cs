@@ -14,5 +14,4 @@ public class ProdutoRepository : IProdutoRepository
 
     public async Task<List<ProdutoEntity>> GetProdutosAsync() => await _dbContext.Produtos!.ToListAsync();
 
-    public async Task<List<ProdutoEntity>> GetProdutosByCategoriaAsync(string categoria) => await _dbContext.Produtos!.Where(p => p.Categoria == categoria).ToListAsync();
 }
