@@ -30,20 +30,6 @@ public class MesaController : ControllerBase
         return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
     }
 
-    [HttpGet("ObterMesaPorNumero/{numeroMesa:int}")]
-    public async Task<IActionResult> ObterPorNumeroMesa(int numeroMesa)
-    {
-        var result = await _mesaService.ObterMesaPorNumero(numeroMesa);
-        return this.ApiResponse(result.Success, result.Message, result.Data != null ? _mapper.Map<MesaDTO>(result.Data) : null);
-    }
-
-
-    [HttpGet("{mesaNumero:int}/ConsumoTotalMesa")]
-    public async Task<IActionResult> ObterConsumoTotalMesa(int mesaNumero)
-    {
-        var result = await _mesaService.ObterConsumoTotalMesa(mesaNumero);
-        return this.ApiResponse(result.Success, result.Message, result.Data);
-    }
 
     [HttpDelete("RemoveMesaPeloNumero/{mesaNumber:int}")]
     public async Task<IActionResult> RemoveMesaPeloNumero(int mesaNumber)
@@ -59,7 +45,6 @@ public class MesaController : ControllerBase
         var result = await _mesaService.RemoveTodasMesasEReiniciaId();
         return this.ApiResponse(result.Success, result.Message, result.Data);
     }
-
 
 
     [HttpPost("CriarMesa")]

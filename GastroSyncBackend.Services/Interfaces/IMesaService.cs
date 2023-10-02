@@ -1,5 +1,4 @@
 ﻿using GastroSyncBackend.Common;
-using GastroSyncBackend.Domain.DTOs;
 using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Domain.Response;
 
@@ -13,6 +12,4 @@ public interface IMesaService
     Task<ServiceResponse<bool>> RemoveTodasMesasEReiniciaId();
     Task<ServiceResponse<IEnumerable<MesaEntity>>> ObterTodasAsMesas();
     Task<ServiceResponse<MesaEntity>> ObterMesaPorNumero(int numeroMesa);
-    Task<ServiceResponse<ConsumoMesaDTO>> ObterConsumoTotalMesa(int mesaNumero);
-
 }
