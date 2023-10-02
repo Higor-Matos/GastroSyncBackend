@@ -6,5 +6,5 @@ namespace GastroSyncBackend.Repository.Interfaces;
 [AutoDI]
 public interface IProdutoRepository
 {
-    Task<List<ProdutoEntity>> GetProdutosAsync();
+    Task<List<ProdutoEntity>> ObterTodosOsProdutos();
 }

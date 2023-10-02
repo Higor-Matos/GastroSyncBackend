@@ -11,9 +11,9 @@ public class PedidoService : IPedidoService
 
     public PedidoService(IPedidoRepository pedidoRepository) => _pedidoRepository = pedidoRepository;
 
-    public async Task<ServiceResponse<bool>> AdicionarPedidoConsumidorMesa(int mesaId, int consumidorId, int produtoId, int quantidade)
+    public async Task<ServiceResponse<bool>> AdicionarPedidoIndividual(int mesaId, int consumidorId, int produtoId, int quantidade)
     {
-        var result = await _pedidoRepository.AdicionarPedidoConsumidorMesa(mesaId, consumidorId, produtoId, quantidade);
+        var result = await _pedidoRepository.AdicionarPedidoIndividual(mesaId, consumidorId, produtoId, quantidade);
         return new ServiceResponse<bool>(result, "Operação concluída", result);
     }
 

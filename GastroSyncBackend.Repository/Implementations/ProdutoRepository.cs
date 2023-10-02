@@ -12,6 +12,6 @@ public class ProdutoRepository : IProdutoRepository
 
     public ProdutoRepository(IAppDbContext dbContext) => _dbContext = dbContext;
 
-    public async Task<List<ProdutoEntity>> GetProdutosAsync() => await _dbContext.Produtos!.ToListAsync();
+    public async Task<List<ProdutoEntity>> ObterTodosOsProdutos() => await _dbContext.Produtos!.ToListAsync();
 
 }

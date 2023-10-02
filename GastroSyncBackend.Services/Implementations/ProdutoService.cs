@@ -12,9 +12,9 @@ public class ProdutoService : IProdutoService
 
     public ProdutoService(IProdutoRepository produtoRepository) => _produtoRepository = produtoRepository;
 
-    public async Task<ServiceResponse<List<ProdutoEntity>>> GetProdutosAsync()
+    public async Task<ServiceResponse<List<ProdutoEntity>>> ObterTodosOsProdutos()
     {
-        var produtos = await _produtoRepository.GetProdutosAsync();
+        var produtos = await _produtoRepository.ObterTodosOsProdutos();
         return new ServiceResponse<List<ProdutoEntity>>(true, "Operação concluída", produtos);
     }
 }
