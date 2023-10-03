@@ -8,11 +8,13 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<MesaEntity, MesaDTO>();
+        CreateMap<MesaEntity, MesaDTO>()
+            .ForMember(dest => dest.Consumidores, opt => opt.MapFrom(src => src.Consumidores));
         CreateMap<ConsumidorEntity, ConsumidorDTO>();
         CreateMap<ProdutoEntity, ProdutoDTO>();
         CreateMap<PedidoEntity, PedidoDTO>()
-            .ForMember(dest => dest.Divisoes, opt => opt.MapFrom(src => src.Divisoes)); 
+            .ForMember(dest => dest.Divisoes, opt => opt.MapFrom(src => src.Divisoes))
+            .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto));  // Novo mapeamento
         CreateMap<DivisaoProdutoEntity, DivisaoProdutoDTO>();
     }
 }
