@@ -44,23 +44,38 @@ public class PedidoRepository : IPedidoRepository
             if (consumidor == null) continue;
 
             var pedido = CreatePedido(consumidorId, produtoId, quantidade);
+
+            // Adicione o pedido ao consumidor e salve as alterações para obter um ID de pedido
             consumidor.Pedidos?.Add(pedido);
+            _dbContext.Pedidos.Add(pedido);
+            await _dbContext.SaveChangesAsync();
 
             var divisao = new DivisaoProdutoEntity
             {
                 ConsumidorId = consumidorId,
                 PedidoId = pedido.Id,
-                ValorDividido = valorDividido
+                ValorDividido = valorDividido,
+                NomeProduto = produto.Nome,  // Novo campo
+                QuantidadeProduto = quantidade,  // Novo campo
+                TotalDivisoes = consumidoresIds.Length  // Novo campo
             };
-            pedido.Divisoes?.Add(divisao);
 
+
+            // Adicione a divisão ao pedido e ao contexto do Entity Framework
+            pedido.Divisoes?.Add(divisao);
+            _dbContext.DivisoesProdutos.Add(divisao); // Nova linha adicionada
+
+            // Atualize o total consumido
             UpdateTotalConsumido(consumidor, mesa!, valorDividido, 1);
         }
 
+        // Salve todas as alterações
         await _dbContext.SaveChangesAsync();
 
         return true;
     }
+
+
 
 
 
@@ -84,6 +99,6 @@ public class PedidoRepository : IPedidoRepository
     {
         var total = precoProduto * quantidade;
         consumidor.TotalConsumido += total;
-        mesa.TotalConsumido += total;
+        mesa.TotalConsumidoMesa += total;
     }
 }

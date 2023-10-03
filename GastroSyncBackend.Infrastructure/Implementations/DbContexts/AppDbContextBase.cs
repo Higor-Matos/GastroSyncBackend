@@ -25,7 +25,7 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
                 .HasColumnType("decimal(18, 2)");
 
             modelBuilder.Entity<MesaEntity>()
-                .Property(b => b.TotalConsumido)
+                .Property(b => b.TotalConsumidoMesa)
                 .HasColumnType("decimal(18, 2)");
 
             // Chamar o método Seed para preencher dados iniciais, se existir

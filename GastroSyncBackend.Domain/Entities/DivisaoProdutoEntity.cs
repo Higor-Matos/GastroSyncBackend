@@ -11,4 +11,12 @@ public class DivisaoProdutoEntity
     public int? ConsumidorId { get; set; }
     public ConsumidorEntity? Consumidor { get; set; }
     public decimal ValorDividido { get; set; }
+    public string? NomeProduto { get; set; } 
+    public int QuantidadeProduto { get; set; } 
+    public int TotalDivisoes { get; set; } 
 }
+
+
+
+
+

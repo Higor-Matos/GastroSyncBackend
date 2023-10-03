@@ -38,7 +38,8 @@ public class AppDbContext : AppDbContextBase, IAppDbContext
         return await dbSet.FindAsync(keyValues);
     }
 
-
+    public DbSet<PedidoEntity> Pedidos { get; set; }
     public DbSet<ConsumidorEntity>? Consumidores { get; set; }
+    public DbSet<DivisaoProdutoEntity> DivisoesProdutos { get; set; }
 
 }
