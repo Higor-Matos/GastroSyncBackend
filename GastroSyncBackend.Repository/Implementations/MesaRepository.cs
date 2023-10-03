@@ -57,8 +57,17 @@ public class MesaRepository : IMesaRepository
     private IQueryable<MesaEntity> IncludeConsumidores() =>
         _dbContext.Mesas!.Include(m => m.Consumidores);
 
-    public async Task<IEnumerable<MesaEntity>> ObterTodasAsMesas() =>
-        await IncludeConsumidores().ToListAsync();
+    public async Task<IEnumerable<MesaEntity>> ObterTodasAsMesas()
+    {
+        return await _dbContext.Mesas!
+            .Include(m => m.Consumidores)!
+            .ThenInclude(c => c.Pedidos)!
+            .ThenInclude(p => p.Divisoes)
+            .Include(m => m.Consumidores)!
+            .ThenInclude(c => c.Pedidos)!
+            .ThenInclude(p => p.Produto)  
+            .ToListAsync();
+    }
 
     public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa) =>
         await IncludeConsumidores()
