@@ -8,5 +8,4 @@ public class PedidoDTO
     public int Quantidade { get; set; }
     public ProdutoDTO? Produto { get; set; }
     public List<DivisaoProdutoDTO>? Divisoes { get; set; }
-
 }

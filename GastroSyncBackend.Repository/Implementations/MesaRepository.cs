@@ -65,9 +65,10 @@ public class MesaRepository : IMesaRepository
             .ThenInclude(p => p.Divisoes)
             .Include(m => m.Consumidores)!
             .ThenInclude(c => c.Pedidos)!
-            .ThenInclude(p => p.Produto)  
+            .ThenInclude(p => p.Produto)
             .ToListAsync();
     }
+
 
     public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa) =>
         await IncludeConsumidores()

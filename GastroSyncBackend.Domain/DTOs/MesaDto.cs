@@ -6,6 +6,6 @@ public class MesaDTO
     public int? NumeroMesa { get; set; }
     public string? Local { get; set; }
     public List<ConsumidorDTO>? Consumidores { get; set; }
-    public decimal TotalConsumido { get; set; }
+    public decimal TotalConsumidoMesa { get; set; }
 
 }

@@ -13,8 +13,9 @@ public class MappingProfile : Profile
         CreateMap<ConsumidorEntity, ConsumidorDTO>();
         CreateMap<ProdutoEntity, ProdutoDTO>();
         CreateMap<PedidoEntity, PedidoDTO>()
-            .ForMember(dest => dest.Divisoes, opt => opt.MapFrom(src => src.Divisoes))
-            .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto));  // Novo mapeamento
+            .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto))
+            .ForMember(dest => dest.Divisoes, opt => opt.MapFrom(src => src.Divisoes)); 
+
         CreateMap<DivisaoProdutoEntity, DivisaoProdutoDTO>();
     }
 }

@@ -9,6 +9,6 @@ public class MesaEntity
     public int? NumeroMesa { get; set; }
     public string? Local { get; set; }
     public List<ConsumidorEntity>? Consumidores { get; set; } = new();
-    public decimal TotalConsumido { get; set; } = 0;
+    public decimal TotalConsumidoMesa { get; set; } = 0;
 
 }
