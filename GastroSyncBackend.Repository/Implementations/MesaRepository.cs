@@ -1,5 +1,4 @@
-﻿using GastroSyncBackend.Domain.DTOs;
-using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -25,27 +24,56 @@ public class MesaRepository : IMesaRepository
     {
         var mesa = await ObterMesaPorNumero(mesaNumber);
         if (mesa == null) return false;
-        _dbContext.Consumidores!.RemoveRange(mesa.Consumidores!);
+
+        var consumidoresRelacionados = mesa.Consumidores;
+
+        foreach (var consumidor in consumidoresRelacionados!)
+        {
+            var divisoesProdutosRelacionados = _dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id);
+            _dbContext.DivisoesProdutos.RemoveRange(divisoesProdutosRelacionados);
+
+            var pedidosRelacionados = _dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id);
+            _dbContext.Pedidos.RemoveRange(pedidosRelacionados);
+        }
+
+        _dbContext.Consumidores!.RemoveRange(consumidoresRelacionados!);
         _dbContext.Mesas!.Remove(mesa);
+
         await _dbContext.SaveChangesAsync();
         return true;
-
     }
+
 
     public async Task<bool> RemoveTodasMesasEReiniciaId()
     {
         var hasMesas = await _dbContext.Mesas!.AnyAsync();
         if (!hasMesas) return false;
+
+        var todasMesas = await _dbContext.Mesas!.Include(m => m.Consumidores).ToListAsync();
+
+        foreach (var mesa in todasMesas)
+        {
+            foreach (var consumidor in mesa.Consumidores!)
+            {
+                var divisoesProdutosRelacionados = _dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id);
+                _dbContext.DivisoesProdutos.RemoveRange(divisoesProdutosRelacionados);
+
+                var pedidosRelacionados = _dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id);
+                _dbContext.Pedidos.RemoveRange(pedidosRelacionados);
+            }
+        }
+
         _dbContext.Consumidores!.RemoveRange(_dbContext.Consumidores);
         _dbContext.Mesas!.RemoveRange(_dbContext.Mesas);
+
         await _dbContext.SaveChangesAsync();
 
         ResetarContadorID(typeof(MesaEntity));
         ResetarContadorID(typeof(ConsumidorEntity));
 
         return true;
-
     }
+
 
     private void ResetarContadorID(Type entityType)
     {
