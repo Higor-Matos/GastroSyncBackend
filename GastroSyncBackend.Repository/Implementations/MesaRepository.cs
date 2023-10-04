@@ -9,7 +9,10 @@ public class MesaRepository : IMesaRepository
 {
     private readonly IAppDbContext _dbContext;
 
-    public MesaRepository(IAppDbContext dbContext) => _dbContext = dbContext;
+    public MesaRepository(IAppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
 
     public async Task<MesaEntity?> CriarMesa(int numeroMesa, string local)
     {
@@ -19,61 +22,45 @@ public class MesaRepository : IMesaRepository
         return mesa;
     }
 
-
     public async Task<bool> RemoveMesaPeloNumero(int mesaNumber)
     {
         var mesa = await ObterMesaPorNumero(mesaNumber);
         if (mesa == null) return false;
 
-        var consumidoresRelacionados = mesa.Consumidores;
-
-        foreach (var consumidor in consumidoresRelacionados!)
-        {
-            var divisoesProdutosRelacionados = _dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id);
-            _dbContext.DivisoesProdutos.RemoveRange(divisoesProdutosRelacionados);
-
-            var pedidosRelacionados = _dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id);
-            _dbContext.Pedidos.RemoveRange(pedidosRelacionados);
-        }
-
-        _dbContext.Consumidores!.RemoveRange(consumidoresRelacionados!);
+        RemoverRelacionados(mesa.Consumidores!);
         _dbContext.Mesas!.Remove(mesa);
-
         await _dbContext.SaveChangesAsync();
         return true;
     }
-
 
     public async Task<bool> RemoveTodasMesasEReiniciaId()
     {
-        var hasMesas = await _dbContext.Mesas!.AnyAsync();
-        if (!hasMesas) return false;
+        if (!await _dbContext.Mesas!.AnyAsync()) return false;
 
-        var todasMesas = await _dbContext.Mesas!.Include(m => m.Consumidores).ToListAsync();
-
-        foreach (var mesa in todasMesas)
+        var todasMesas = await ObterTodasAsMesas();
+        var mesaEntities = todasMesas as MesaEntity[] ?? todasMesas.ToArray();
+        foreach (var mesa in mesaEntities)
         {
-            foreach (var consumidor in mesa.Consumidores!)
-            {
-                var divisoesProdutosRelacionados = _dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id);
-                _dbContext.DivisoesProdutos.RemoveRange(divisoesProdutosRelacionados);
-
-                var pedidosRelacionados = _dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id);
-                _dbContext.Pedidos.RemoveRange(pedidosRelacionados);
-            }
+            RemoverRelacionados(mesa.Consumidores!);
         }
-
-        _dbContext.Consumidores!.RemoveRange(_dbContext.Consumidores);
-        _dbContext.Mesas!.RemoveRange(_dbContext.Mesas);
+        _dbContext.Mesas!.RemoveRange(mesaEntities);
 
         await _dbContext.SaveChangesAsync();
-
         ResetarContadorID(typeof(MesaEntity));
         ResetarContadorID(typeof(ConsumidorEntity));
-
         return true;
     }
 
+
+    private void RemoverRelacionados(List<ConsumidorEntity> consumidores)
+    {
+        consumidores.ForEach(consumidor =>
+        {
+            _dbContext.DivisoesProdutos.RemoveRange(_dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id));
+            _dbContext.Pedidos.RemoveRange(_dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id));
+        });
+        _dbContext.Consumidores!.RemoveRange(consumidores);
+    }
 
     private void ResetarContadorID(Type entityType)
     {
@@ -82,24 +69,22 @@ public class MesaRepository : IMesaRepository
         _dbContext.Database.ExecuteSqlRaw(sql);
     }
 
-    private IQueryable<MesaEntity> IncludeConsumidores() =>
-        _dbContext.Mesas!.Include(m => m.Consumidores);
-
     public async Task<IEnumerable<MesaEntity>> ObterTodasAsMesas()
     {
-        return await _dbContext.Mesas!
+        return await IncludeConsumidores().ToListAsync();
+    }
+
+    private IQueryable<MesaEntity> IncludeConsumidores() =>
+        _dbContext.Mesas!
             .Include(m => m.Consumidores)!
             .ThenInclude(c => c.Pedidos)!
             .ThenInclude(p => p.Divisoes)
             .Include(m => m.Consumidores)!
             .ThenInclude(c => c.Pedidos)!
-            .ThenInclude(p => p.Produto)
-            .ToListAsync();
+            .ThenInclude(p => p.Produto);
+
+    public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa)
+    {
+        return await IncludeConsumidores().FirstOrDefaultAsync(m => m.NumeroMesa == numeroMesa);
     }
-
-
-    public async Task<MesaEntity?> ObterMesaPorNumero(int numeroMesa) =>
-        await IncludeConsumidores()
-            .FirstOrDefaultAsync(m => m.NumeroMesa == numeroMesa);
 }
-
