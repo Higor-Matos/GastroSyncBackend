@@ -9,10 +9,7 @@ public class MesaRepository : IMesaRepository
 {
     private readonly IAppDbContext _dbContext;
 
-    public MesaRepository(IAppDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    public MesaRepository(IAppDbContext dbContext) => _dbContext = dbContext;
 
     public async Task<MesaEntity?> CriarMesa(int numeroMesa, string local)
     {
@@ -48,6 +45,8 @@ public class MesaRepository : IMesaRepository
         await _dbContext.SaveChangesAsync();
         ResetarContadorID(typeof(MesaEntity));
         ResetarContadorID(typeof(ConsumidorEntity));
+        ResetarContadorID(typeof(DivisaoProdutoEntity));
+        ResetarContadorID(typeof(PedidoEntity));
         return true;
     }
 
