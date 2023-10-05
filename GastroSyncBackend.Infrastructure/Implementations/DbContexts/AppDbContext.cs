@@ -41,5 +41,6 @@ public class AppDbContext : AppDbContextBase, IAppDbContext
     public DbSet<PedidoEntity> Pedidos { get; set; }
     public DbSet<ConsumidorEntity>? Consumidores { get; set; }
     public DbSet<DivisaoProdutoEntity> DivisoesProdutos { get; set; }
+    public DbSet<ConfiguracaoEstabelecimentoEntity> ConfiguracaoEstabelecimento { get; set; }
 
 }
