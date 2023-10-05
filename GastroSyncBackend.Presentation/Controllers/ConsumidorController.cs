@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using GastroSyncBackend.Presentation.Extensions;
+﻿using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +11,10 @@ public class ConsumidorController : ControllerBase
 {
 
     private readonly IConsumidorService _consumidorService;
-    private readonly IMapper _mapper;
 
-    public ConsumidorController(IConsumidorService consumidorService, IMapper mapper)
+    public ConsumidorController(IConsumidorService consumidorService)
     {
         _consumidorService = consumidorService;
-        _mapper = mapper;
     }
 
     [HttpPost("{mesaId:int}/AdicionarConsumidoresMesa")]

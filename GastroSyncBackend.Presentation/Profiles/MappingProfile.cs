@@ -17,5 +17,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Divisoes, opt => opt.MapFrom(src => src.Divisoes)); 
 
         CreateMap<DivisaoProdutoEntity, DivisaoProdutoDTO>();
+
+        CreateMap<ConfiguracaoEstabelecimentoEntity, CoverStatusDTO>()
+            .ForMember(dest => dest.IsCoverAtivo, opt => opt.MapFrom(src => src.UsarCover));
     }
 }
+
