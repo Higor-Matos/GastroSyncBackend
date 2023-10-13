@@ -15,7 +15,6 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configurações de tipo de coluna para evitar avisos de truncagem
             modelBuilder.Entity<ConsumidorEntity>()
                 .Property(b => b.TotalConsumido)
                 .HasColumnType("decimal(18, 2)");
@@ -28,7 +27,6 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
                 .Property(b => b.TotalConsumidoMesa)
                 .HasColumnType("decimal(18, 2)");
 
-            // Chamar o método Seed para preencher dados iniciais, se existir
             SeedData.Seed(modelBuilder);
         }
     }

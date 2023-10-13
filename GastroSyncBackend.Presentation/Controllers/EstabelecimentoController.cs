@@ -34,14 +34,9 @@ public class EstabelecimentoController : ControllerBase
     public async Task<IActionResult> StatusCover()
     {
         var result = await _configuracaoEstabelecimentoService.ObterStatusCover();
-
-        if (!result.Success)
-            return this.ApiResponse<bool>(result.Success, result.Message, result.Data);
-
-        var coverStatusDto = new CoverStatusDTO { IsCoverAtivo = result.Data };
-
-        return this.ApiResponse<CoverStatusDTO>(result.Success, result.Message, coverStatusDto);
+        return this.ApiResponse(result.Success, result.Message, result.Data);
     }
+
 
 
     [HttpPost("AtualizarValorCover/{novoValor:decimal}")]

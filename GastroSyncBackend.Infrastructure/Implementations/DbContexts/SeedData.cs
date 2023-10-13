@@ -17,6 +17,10 @@ public static class SeedData
             new ProdutoEntity { Id = 8, Nome = "Cerveja", Preco = 15M, Categoria = "Bebida" }
         );
 
+        modelBuilder.Entity<ConfiguracaoEstabelecimentoEntity>()
+            .Property(p => p.ValorCover)
+            .HasPrecision(10, 2);  
+
         modelBuilder.Entity<ConfiguracaoEstabelecimentoEntity>().HasData(
             new ConfiguracaoEstabelecimentoEntity { Id = 1, UsarCover = false, ValorCover = 15m }
         );

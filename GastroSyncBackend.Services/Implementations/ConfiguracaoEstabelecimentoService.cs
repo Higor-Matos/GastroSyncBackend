@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Response;
+﻿using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Domain.Response;
 using GastroSyncBackend.Repositories.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
 
@@ -31,11 +32,13 @@ namespace GastroSyncBackend.Services
             return new ServiceResponse<bool>(atualizado, atualizado ? "Cover desativado com sucesso." : "Erro ao desativar o cover.");
         }
 
-        public async Task<ServiceResponse<bool>> ObterStatusCover()
+        public async Task<ServiceResponse<CoverStatusDTO>> ObterStatusCover()
         {
             var config = await _configuracaoRepo.ObterConfiguracaoAsync();
-            return new ServiceResponse<bool>(true, "Operação bem-sucedida.", config?.UsarCover ?? false);
+            var dto = new CoverStatusDTO { IsCoverAtivo = config.UsarCover, ValorCover = config.ValorCover };
+            return new ServiceResponse<CoverStatusDTO>(true, "Operação bem-sucedida.", dto);
         }
+
 
         public async Task<ServiceResponse<bool>> AtualizarValorCover(decimal novoValor)
         {
