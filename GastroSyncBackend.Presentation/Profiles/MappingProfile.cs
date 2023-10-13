@@ -20,6 +20,7 @@ public class MappingProfile : Profile
         CreateMap<ConfiguracaoEstabelecimentoEntity, CoverStatusDTO>()
             .ForMember(dest => dest.IsCoverAtivo, opt => opt.MapFrom(src => src.UsarCover))
             .ForMember(dest => dest.ValorCover, opt => opt.MapFrom(src => src.ValorCover)); // Adicione esta linha
+        CreateMap<PagamentoEntity, PagamentoDTO>();
 
     }
 }
