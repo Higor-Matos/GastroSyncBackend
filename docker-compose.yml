@@ -5,7 +5,8 @@ services:
     container_name: gastrosyncbackend-presentation-gastrosyncbackend
     image: ${DOCKER_REGISTRY-}gastrosyncbackendpresentation
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    - ASPNETCORE_URLS=https://+:443;http://+:80
     build:
       context: .
       dockerfile: GastroSyncBackend.Presentation/Dockerfile

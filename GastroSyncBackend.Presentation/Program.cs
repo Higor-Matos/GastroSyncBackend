@@ -1,6 +1,8 @@
 using GastroSyncBackend.Infrastructure.Implementations.DbContexts;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Presentation.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
@@ -88,7 +90,13 @@ void EnableSwagger(IApplicationBuilder app)
 
 void ConfigureAppMiddleware(WebApplication app)
 {
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
+
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
 }
+
