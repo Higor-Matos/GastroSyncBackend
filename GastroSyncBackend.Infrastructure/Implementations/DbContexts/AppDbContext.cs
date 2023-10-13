@@ -2,6 +2,10 @@
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using NLog;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
 {
@@ -12,6 +16,7 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
+
 
         public new DbSet<ProdutoEntity>? Produtos { get; set; }
         public DbSet<PedidoEntity>? Pedidos { get; set; }
@@ -39,15 +44,19 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
         {
             try
             {
+                Logger.Info("Configuração de warnings aplicada, iniciando migração do banco de dados.");
+
                 await Database.MigrateAsync();
+
                 Logger.Info("Banco de dados migrado com sucesso.");
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Erro ao migrar o banco de dados.");
+                Logger.Error(ex, "Erro ao migrar o banco de dados. Verifique se as configurações estão corretas e se o banco de dados está acessível.");
                 throw;
             }
         }
+
 
         public new async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -73,24 +82,6 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
             catch (Exception ex)
             {
                 Logger.Error(ex, "Erro ao buscar entidade no banco de dados.");
-                throw;
-            }
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            try
-            {
-                base.OnModelCreating(modelBuilder);
-
-                modelBuilder.Entity<ProdutoEntity>()
-                    .Property(p => p.Preco)
-                    .HasColumnType("decimal(18,2)")
-                    .HasPrecision(18, 2);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Erro ao configurar o modelo do banco de dados.");
                 throw;
             }
         }
