@@ -42,7 +42,7 @@ namespace GastroSyncBackend.Repository.Implementations
                 var divisao = new DivisaoProdutoEntity
                 {
                     ConsumidorId = id,
-                    PedidoId = pedido.Id, 
+                    PedidoId = pedido.Id,
                     ValorDividido = valorDividido,
                     NomeProduto = produto.Nome,
                     QuantidadeProduto = quantidade,
@@ -60,7 +60,7 @@ namespace GastroSyncBackend.Repository.Implementations
 
         private PedidoEntity AdicionarPedido(ConsumidorEntity consumidor, int produtoId, decimal preco, int quantidade)
         {
-            if (!consumidor.Id.HasValue) return null!;  
+            if (!consumidor.Id.HasValue) return null!;
 
             var pedido = CreatePedido(consumidor.Id.Value, produtoId, quantidade);
             UpdateTotalConsumido(consumidor, preco, quantidade);

@@ -1,34 +1,39 @@
 ﻿using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
-namespace GastroSyncBackend.Presentation.Controllers;
-
-
-[ApiController]
-[Route("api/[controller]")]
-public class ConsumidorController : ControllerBase
+namespace GastroSyncBackend.Presentation.Controllers
 {
-
-    private readonly IConsumidorService _consumidorService;
-
-    public ConsumidorController(IConsumidorService consumidorService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ConsumidorController : ControllerBase
     {
-        _consumidorService = consumidorService;
-    }
+        private readonly IConsumidorService _consumidorService;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    [HttpPost("{mesaId:int}/AdicionarConsumidoresMesa")]
-    public async Task<IActionResult> AdicionarConsumidoresMesa(int mesaId, [FromBody] List<string> consumidores)
-    {
-        try
+        public ConsumidorController(IConsumidorService consumidorService)
         {
-            var result = await _consumidorService.AdicionarConsumidoresMesa(mesaId, consumidores);
-            return this.ApiResponse(result.Success, result.Message, result.Data);
+            _consumidorService = consumidorService;
         }
-        catch (Exception)
+
+        [HttpPost("{mesaId:int}/AdicionarConsumidoresMesa")]
+        public async Task<IActionResult> AdicionarConsumidoresMesa(int mesaId, [FromBody] List<string> consumidores)
         {
-            return this.ApiResponse(false, "Operação concluída", false);
+            try
+            {
+                var result = await _consumidorService.AdicionarConsumidoresMesa(mesaId, consumidores);
+
+                Logger.Info("Operação concluída com sucesso.");
+
+                return this.ApiResponse(result.Success, result.Message, result.Data);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Erro ao executar a operação.");
+
+                return this.ApiResponse(false, "Erro ao executar a operação", false);
+            }
         }
     }
-
 }
