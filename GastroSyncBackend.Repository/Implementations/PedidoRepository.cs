@@ -2,16 +2,24 @@
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace GastroSyncBackend.Repository.Implementations
+namespace GastroSyncBackend.Repository.Implementations;
+
+public class PedidoRepository : IPedidoRepository
 {
-    public class PedidoRepository : IPedidoRepository
+    private readonly IAppDbContext _dbContext;
+    private readonly ILogger<PedidoRepository> _logger;
+
+    public PedidoRepository(IAppDbContext dbContext, ILogger<PedidoRepository> logger)
     {
-        private readonly IAppDbContext _dbContext;
+        _dbContext = dbContext;
+        _logger = logger;
+    }
 
-        public PedidoRepository(IAppDbContext dbContext) => _dbContext = dbContext;
-
-        public async Task<bool> AdicionarPedidoIndividual(int mesaId, int consumidorId, int produtoId, int quantidade)
+    public async Task<bool> AdicionarPedidoIndividual(int mesaId, int consumidorId, int produtoId, int quantidade)
+    {
+        try
         {
             var (mesa, consumidor, produto) = await GetEntitiesAsync(mesaId, consumidorId, produtoId);
             if (mesa == null || consumidor == null || produto == null) return false;
@@ -19,10 +27,19 @@ namespace GastroSyncBackend.Repository.Implementations
             AdicionarPedido(consumidor, produtoId, produto.Preco, quantidade);
             await _dbContext.SaveChangesAsync();
 
+            _logger.LogInformation("Pedido individual adicionado com sucesso.");
             return true;
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao adicionar pedido individual.");
+            throw;
+        }
+    }
 
-        public async Task<bool> AdicionarPedidoDividido(int mesaId, int[] consumidoresIds, int produtoId, int quantidade)
+    public async Task<bool> AdicionarPedidoDividido(int mesaId, int[] consumidoresIds, int produtoId, int quantidade)
+    {
+        try
         {
             var mesa = await GetMesaByNumeroAsync(mesaId);
             var produto = await _dbContext.Produtos!.FindAsync(produtoId);
@@ -54,49 +71,59 @@ namespace GastroSyncBackend.Repository.Implementations
             }
 
             await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("Pedido dividido adicionado com sucesso.");
             return true;
         }
-
-
-        private PedidoEntity AdicionarPedido(ConsumidorEntity consumidor, int produtoId, decimal preco, int quantidade)
+        catch (Exception ex)
         {
-            if (!consumidor.Id.HasValue) return null!;
-
-            var pedido = CreatePedido(consumidor.Id.Value, produtoId, quantidade);
-            UpdateTotalConsumido(consumidor, preco, quantidade);
-
-            consumidor.Pedidos?.Add(pedido);
-            _dbContext.Pedidos!.Add(pedido);
-
-            return pedido;
+            _logger.LogError(ex, "Erro ao adicionar pedido dividido.");
+            throw;
         }
+    }
+
+    public async Task<PedidoEntity?> ObterPedidoPorId(int pedidoId)
+    {
+        return await _dbContext.Pedidos!.FindAsync(pedidoId);
+    }
 
 
+    private PedidoEntity AdicionarPedido(ConsumidorEntity consumidor, int produtoId, decimal preco, int quantidade)
+    {
+        if (!consumidor.Id.HasValue) return null!;
 
-        private async Task<(MesaEntity?, ConsumidorEntity?, ProdutoEntity?)> GetEntitiesAsync(int mesaId, int consumidorId, int produtoId)
-        {
-            var mesa = await GetMesaByNumeroAsync(mesaId);
-            var consumidor = mesa?.Consumidores?.FirstOrDefault(c => c.Id == consumidorId);
-            var produto = await _dbContext.Produtos!.FindAsync(produtoId);
+        var pedido = CreatePedido(consumidor.Id.Value, produtoId, quantidade);
+        UpdateTotalConsumido(consumidor, preco, quantidade);
 
-            return (mesa, consumidor, produto);
-        }
+        consumidor.Pedidos?.Add(pedido);
+        _dbContext.Pedidos!.Add(pedido);
 
-        private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero) =>
-            await _dbContext.Mesas!
-                .Include(m => m.Consumidores)!
-                .ThenInclude(c => c.Pedidos)
-                .AsSplitQuery()
-                .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+        return pedido;
+    }
 
-        private static PedidoEntity CreatePedido(int consumidorId, int produtoId, int quantidade) =>
-            new() { ConsumidorId = consumidorId, ProdutoId = produtoId, Quantidade = quantidade };
+    private async Task<(MesaEntity?, ConsumidorEntity?, ProdutoEntity?)> GetEntitiesAsync(int mesaId, int consumidorId, int produtoId)
+    {
+        var mesa = await GetMesaByNumeroAsync(mesaId);
+        var consumidor = mesa?.Consumidores?.FirstOrDefault(c => c.Id == consumidorId);
+        var produto = await _dbContext.Produtos!.FindAsync(produtoId);
 
-        private static void UpdateTotalConsumido(ConsumidorEntity consumidor, decimal precoProduto, int quantidade)
-        {
-            var total = precoProduto * quantidade;
-            consumidor.TotalConsumido += total;
-            consumidor.Mesa!.TotalConsumidoMesa += total;
-        }
+        return (mesa, consumidor, produto);
+    }
+
+    private async Task<MesaEntity?> GetMesaByNumeroAsync(int mesaNumero) =>
+        await _dbContext.Mesas!
+            .Include(m => m.Consumidores)!
+            .ThenInclude(c => c.Pedidos)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
+
+    private static PedidoEntity CreatePedido(int consumidorId, int produtoId, int quantidade) =>
+        new() { ConsumidorId = consumidorId, ProdutoId = produtoId, Quantidade = quantidade };
+
+    private static void UpdateTotalConsumido(ConsumidorEntity consumidor, decimal precoProduto, int quantidade)
+    {
+        var total = precoProduto * quantidade;
+        consumidor.TotalConsumido += total;
+        consumidor.Mesa!.TotalConsumidoMesa += total;
     }
 }
