@@ -2,30 +2,50 @@
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace GastroSyncBackend.Repository.Implementations;
 
 public class PagamentoRepository : IPagamentoRepository
 {
     private readonly IAppDbContext _dbContext;
+    private readonly ILogger<PagamentoRepository> _logger;
 
-    public PagamentoRepository(IAppDbContext dbContext)
+    public PagamentoRepository(IAppDbContext dbContext, ILogger<PagamentoRepository> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task<PagamentoEntity> CriarPagamento(PagamentoEntity pagamento)
     {
-        await _dbContext.Pagamentos!.AddAsync(pagamento);
-        await _dbContext.SaveChangesAsync();
-        return pagamento;
+        try
+        {
+            await _dbContext.Pagamentos!.AddAsync(pagamento);
+            await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Pagamento criado com sucesso.");
+            return pagamento;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao criar pagamento.");
+            throw;
+        }
     }
 
     public async Task<IEnumerable<PagamentoEntity>> ObterPagamentosPorConsumidor(int consumidorId)
     {
-        return await _dbContext.Pagamentos!
-            .Where(p => p.ConsumidorId == consumidorId)
-            .AsSplitQuery()
-            .ToListAsync();
+        try
+        {
+            return await _dbContext.Pagamentos!
+                .Where(p => p.ConsumidorId == consumidorId)
+                .AsSplitQuery()
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao obter pagamentos por consumidor.");
+            throw;
+        }
     }
 }

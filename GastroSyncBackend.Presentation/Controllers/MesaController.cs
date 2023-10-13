@@ -5,6 +5,7 @@ using GastroSyncBackend.Domain.Request;
 using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace GastroSyncBackend.Presentation.Controllers;
 
@@ -14,6 +15,7 @@ public class MesaController : ControllerBase
 {
     private readonly IMesaService _mesaService;
     private readonly IMapper _mapper;
+    private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
     public MesaController(IMesaService mesaService, IMapper mapper)
     {
@@ -24,28 +26,56 @@ public class MesaController : ControllerBase
     [HttpGet("ObterTodasAsMesas")]
     public async Task<IActionResult> ObterTodasAsMesas()
     {
-        var result = await _mesaService.ObterTodasAsMesas();
-        if (!result.Success) return this.ApiResponse<object>(result.Success, result.Message, null!);
-        var mesasDto = _mapper.Map<List<MesaDTO>>(result.Data);
-        return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
+        try
+        {
+            var result = await _mesaService.ObterTodasAsMesas();
+            if (!result.Success)
+            {
+                _logger.Warn("Falha ao obter todas as mesas: " + result.Message);
+                return this.ApiResponse<object>(result.Success, result.Message, null!);
+            }
+            var mesasDto = _mapper.Map<List<MesaDTO>>(result.Data);
+            _logger.Info("Método ObterTodasAsMesas executado com sucesso.");
+            return this.ApiResponse(true, "Mesas recuperadas com sucesso", mesasDto);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Erro ao executar o método ObterTodasAsMesas.");
+            return this.ApiResponse<object>(false, "Ocorreu um erro ao executar a operação.", null!);
+        }
     }
-
 
     [HttpDelete("RemoveMesaPeloNumero/{mesaNumber:int}")]
     public async Task<IActionResult> RemoveMesaPeloNumero(int mesaNumber)
     {
-        var result = await _mesaService.RemoveMesaPeloNumero(mesaNumber);
-        return this.ApiResponse(result.Success, result.Message, result.Data);
+        try
+        {
+            var result = await _mesaService.RemoveMesaPeloNumero(mesaNumber);
+            _logger.Info($"Método RemoveMesaPeloNumero executado com sucesso para a mesa {mesaNumber}.");
+            return this.ApiResponse(result.Success, result.Message, result.Data);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, $"Erro ao executar o método RemoveMesaPeloNumero para a mesa {mesaNumber}.");
+            return this.ApiResponse<bool>(false, "Operação concluída", false);
+        }
     }
-
 
     [HttpDelete("RemoveTodasMesas")]
     public async Task<IActionResult> RemoveTodasMesasEReiniciaId()
     {
-        var result = await _mesaService.RemoveTodasMesasEReiniciaId();
-        return this.ApiResponse(result.Success, result.Message, result.Data);
+        try
+        {
+            var result = await _mesaService.RemoveTodasMesasEReiniciaId();
+            _logger.Info("Método RemoveTodasMesasEReiniciaId executado com sucesso.");
+            return this.ApiResponse(result.Success, result.Message, result.Data);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Erro ao executar o método RemoveTodasMesasEReiniciaId.");
+            return this.ApiResponse<MesaEntity>(false, "Operação concluída", null);
+        }
     }
-
 
     [HttpPost("CriarMesa")]
     public async Task<IActionResult> CriarMesa([FromBody] MesaCreateRequest request)
@@ -53,12 +83,13 @@ public class MesaController : ControllerBase
         try
         {
             var result = await _mesaService.CriarMesa(request.NumeroMesa, request.Local!);
+            _logger.Info("Método CriarMesa executado com sucesso.");
             return this.ApiResponse(result.Success, result.Message, result.Data);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.Error(ex, "Erro ao executar o método CriarMesa.");
             return this.ApiResponse<MesaEntity>(false, "Operação concluída", null);
         }
     }
-
 }

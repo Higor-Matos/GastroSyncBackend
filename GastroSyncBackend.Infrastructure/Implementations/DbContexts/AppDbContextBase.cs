@@ -1,17 +1,23 @@
 ﻿using GastroSyncBackend.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
+namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts;
+
+public abstract class AppDbContextBase : DbContext
 {
-    public abstract class AppDbContextBase : DbContext
+    private readonly ILogger<AppDbContextBase> _logger;
+
+    public DbSet<ProdutoEntity>? Produtos { get; set; }
+
+    protected AppDbContextBase(DbContextOptions options, ILogger<AppDbContextBase> logger) : base(options)
     {
-        public DbSet<ProdutoEntity>? Produtos { get; set; }
+        _logger = logger;
+    }
 
-        protected AppDbContextBase(DbContextOptions options) : base(options)
-        {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        try
         {
             base.OnModelCreating(modelBuilder);
 
@@ -37,7 +43,21 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
                 .HasColumnType("decimal(18,2)")
                 .HasPrecision(18, 2);
 
+            modelBuilder.Entity<ConfiguracaoEstabelecimentoEntity>()
+                .Property(p => p.ValorCover)
+                .HasColumnType("decimal(10,2)")
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<ConfiguracaoEstabelecimentoEntity>().HasData(
+                new ConfiguracaoEstabelecimentoEntity { Id = 1, UsarCover = false, ValorCover = 15m }
+            );
+
             SeedData.Seed(modelBuilder);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao configurar o modelo do banco de dados.");
+            throw;
         }
     }
 }
