@@ -16,15 +16,16 @@ public class PagamentoRepository : IPagamentoRepository
 
     public async Task<PagamentoEntity> CriarPagamento(PagamentoEntity pagamento)
     {
-        await _dbContext.Pagamentos.AddAsync(pagamento);
+        await _dbContext.Pagamentos!.AddAsync(pagamento);
         await _dbContext.SaveChangesAsync();
         return pagamento;
     }
 
     public async Task<IEnumerable<PagamentoEntity>> ObterPagamentosPorConsumidor(int consumidorId)
     {
-        return await _dbContext.Pagamentos
+        return await _dbContext.Pagamentos!
             .Where(p => p.ConsumidorId == consumidorId)
+            .AsSplitQuery()
             .ToListAsync();
     }
 }

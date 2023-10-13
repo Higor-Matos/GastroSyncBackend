@@ -1,7 +1,6 @@
 using GastroSyncBackend.Infrastructure.Implementations.DbContexts;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Presentation.Extensions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
@@ -56,7 +55,12 @@ void ConfigureApp(WebApplicationBuilder builder)
     // Configuração do DbContext
     builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure()));
+            sqlOptions =>
+            {
+                sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                sqlOptions.EnableRetryOnFailure();
+            }));
+
 
     // Classe de resolução de dependências
     var result = builder.Services.AddServicesWithAutoDi();

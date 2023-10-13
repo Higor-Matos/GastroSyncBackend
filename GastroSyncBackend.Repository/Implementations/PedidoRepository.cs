@@ -50,7 +50,7 @@ namespace GastroSyncBackend.Repository.Implementations
                 };
 
                 pedido.Divisoes?.Add(divisao);
-                _dbContext.DivisoesProdutos.Add(divisao);
+                _dbContext.DivisoesProdutos!.Add(divisao);
             }
 
             await _dbContext.SaveChangesAsync();
@@ -66,7 +66,7 @@ namespace GastroSyncBackend.Repository.Implementations
             UpdateTotalConsumido(consumidor, preco, quantidade);
 
             consumidor.Pedidos?.Add(pedido);
-            _dbContext.Pedidos.Add(pedido);
+            _dbContext.Pedidos!.Add(pedido);
 
             return pedido;
         }
@@ -86,6 +86,7 @@ namespace GastroSyncBackend.Repository.Implementations
             await _dbContext.Mesas!
                 .Include(m => m.Consumidores)!
                 .ThenInclude(c => c.Pedidos)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
 
         private static PedidoEntity CreatePedido(int consumidorId, int produtoId, int quantidade) =>

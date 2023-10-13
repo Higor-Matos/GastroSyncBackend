@@ -39,6 +39,7 @@ namespace GastroSyncBackend.Repository.Implementations
         private async Task<MesaEntity?> ObterMesaPorNumero(int mesaNumero) =>
             await _dbContext.Mesas!
                 .Include(m => m.Consumidores)
+                .AsSplitQuery()  
                 .FirstOrDefaultAsync(m => m.NumeroMesa == mesaNumero);
 
         public async Task<bool> AtualizarConsumidor(ConsumidorEntity consumidor)
@@ -66,6 +67,7 @@ namespace GastroSyncBackend.Repository.Implementations
             {
                 var consumidor = await _dbContext.Consumidores!
                     .Include(c => c.Pedidos)
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(c => c.Id == id);
 
                 Logger.Info("Consumidor obtido com sucesso.");

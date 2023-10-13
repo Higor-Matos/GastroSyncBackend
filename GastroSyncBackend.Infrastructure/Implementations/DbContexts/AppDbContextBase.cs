@@ -27,6 +27,16 @@ namespace GastroSyncBackend.Infrastructure.Implementations.DbContexts
                 .Property(b => b.TotalConsumidoMesa)
                 .HasColumnType("decimal(18, 2)");
 
+            modelBuilder.Entity<ProdutoEntity>()
+                .Property(p => p.Preco)
+                .HasColumnType("decimal(18,2)")
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<PagamentoEntity>()
+                .Property(p => p.ValorPago)
+                .HasColumnType("decimal(18,2)")
+                .HasPrecision(18, 2);
+
             SeedData.Seed(modelBuilder);
         }
     }

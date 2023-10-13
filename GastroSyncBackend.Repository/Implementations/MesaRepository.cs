@@ -55,8 +55,8 @@ public class MesaRepository : IMesaRepository
     {
         consumidores.ForEach(consumidor =>
         {
-            _dbContext.DivisoesProdutos.RemoveRange(_dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id));
-            _dbContext.Pedidos.RemoveRange(_dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id));
+            _dbContext.DivisoesProdutos!.RemoveRange(_dbContext.DivisoesProdutos.Where(dp => dp.ConsumidorId == consumidor.Id));
+            _dbContext.Pedidos!.RemoveRange(_dbContext.Pedidos.Where(p => p.ConsumidorId == consumidor.Id));
         });
         _dbContext.Consumidores!.RemoveRange(consumidores);
     }

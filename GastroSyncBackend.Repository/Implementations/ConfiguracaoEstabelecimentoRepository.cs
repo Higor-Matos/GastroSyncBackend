@@ -13,14 +13,15 @@ namespace GastroSyncBackend.Repositories
 
         public async Task<ConfiguracaoEstabelecimentoEntity> ObterConfiguracaoAsync()
         {
-            return (await _dbContext.ConfiguracaoEstabelecimento
+            return (await _dbContext.ConfiguracaoEstabelecimento!
                 .OrderBy(x => x.Id)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync())!;
         }
 
         public async Task<bool> AtualizarConfiguracaoAsync(ConfiguracaoEstabelecimentoEntity configuracao)
         {
-            _dbContext.ConfiguracaoEstabelecimento.Update(configuracao);
+            _dbContext.ConfiguracaoEstabelecimento!.Update(configuracao);
 
             try
             {
