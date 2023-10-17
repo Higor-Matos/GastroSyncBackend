@@ -52,19 +52,30 @@ public class PagamentoRepository : IPagamentoRepository
 
     public async Task<List<PagamentoDetalhadoDto>> ObterPagamentosDetalhados()
     {
-        return await _dbContext.Pagamentos
+        return await _dbContext.Pagamentos!
             .Include(p => p.Consumidor)
-            .ThenInclude(c => c.Pedidos)
+            .ThenInclude(c => c!.Pedidos)!
+            .ThenInclude(p => p.Divisoes)!
+            .ThenInclude(d => d.Consumidor)
             .Select(p => new PagamentoDetalhadoDto
             {
                 Id = p.Id,
                 ConsumidorId = p.ConsumidorId,
-                ConsumidorNome = p.Consumidor.Nome,
+                ConsumidorNome = p.Consumidor!.Nome,
                 ValorPago = p.ValorPago,
                 DataPagamento = p.DataPagamento,
-                PedidosPagos = p.Consumidor.Pedidos.Select(pe => pe.Id.ToString()).ToList()
+                PedidosPagos = p.Consumidor.Pedidos!.Select(pe => pe.Id.ToString()).ToList(),
+                DivisoesProdutos = p.Consumidor.Pedidos!.SelectMany(pe => pe.Divisoes!).Select(d => new DivisaoProdutoDTO
+                {
+                    ConsumidorId = d.ConsumidorId,
+                    ConsumidorNome = d.Consumidor!.Nome,
+                    NomeProduto = d.NomeProduto,
+                    ValorDividido = d.ValorDividido,
+                    TotalDivisoes = d.TotalDivisoes
+                }).ToList()
             })
             .ToListAsync();
     }
+
 
 }
