@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Infrastructure.Interfaces.DbContexts;
 using GastroSyncBackend.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -48,4 +49,22 @@ public class PagamentoRepository : IPagamentoRepository
             throw;
         }
     }
+
+    public async Task<List<PagamentoDetalhadoDto>> ObterPagamentosDetalhados()
+    {
+        return await _dbContext.Pagamentos
+            .Include(p => p.Consumidor)
+            .ThenInclude(c => c.Pedidos)
+            .Select(p => new PagamentoDetalhadoDto
+            {
+                Id = p.Id,
+                ConsumidorId = p.ConsumidorId,
+                ConsumidorNome = p.Consumidor.Nome,
+                ValorPago = p.ValorPago,
+                DataPagamento = p.DataPagamento,
+                PedidosPagos = p.Consumidor.Pedidos.Select(pe => pe.Id.ToString()).ToList()
+            })
+            .ToListAsync();
+    }
+
 }

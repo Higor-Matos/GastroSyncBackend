@@ -1,4 +1,5 @@
-﻿using GastroSyncBackend.Domain.Entities;
+﻿using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Domain.Entities;
 using GastroSyncBackend.Domain.Response;
 using GastroSyncBackend.Repository.Interfaces;
 using GastroSyncBackend.Services.Interfaces;
@@ -61,4 +62,10 @@ public class PagamentoService : IPagamentoService
             DataPagamento = DateTime.Now
         };
     }
+
+    public async Task<List<PagamentoDetalhadoDto>> ObterPagamentosDetalhados()
+    {
+        return await _pagamentoRepository.ObterPagamentosDetalhados();
+    }
+
 }

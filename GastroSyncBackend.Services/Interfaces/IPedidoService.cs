@@ -1,4 +1,5 @@
 ﻿using GastroSyncBackend.Common;
+using GastroSyncBackend.Domain.DTOs;
 using GastroSyncBackend.Domain.Response;
 
 namespace GastroSyncBackend.Services.Interfaces;

@@ -1,4 +1,6 @@
-﻿using GastroSyncBackend.Presentation.Extensions;
+﻿using AutoMapper;
+using GastroSyncBackend.Domain.DTOs;
+using GastroSyncBackend.Presentation.Extensions;
 using GastroSyncBackend.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,12 @@ namespace GastroSyncBackend.Presentation.Controllers;
 public class PagamentoController : ControllerBase
 {
     private readonly IPagamentoService _pagamentoService;
+    private readonly IMapper _mapper;
 
-    public PagamentoController(IPagamentoService pagamentoService)
+    public PagamentoController(IPagamentoService pagamentoService, IMapper mapper)
     {
         _pagamentoService = pagamentoService;
+        _mapper = mapper;
     }
 
     [HttpPost("RealizarPagamento")]
@@ -22,4 +26,15 @@ public class PagamentoController : ControllerBase
 
         return result.Success ? this.ApiResponse(true, "Pagamento realizado com sucesso.", result.Data) : this.ApiResponse(false, "Falha ao realizar o pagamento.", result.Data);
     }
+
+    [HttpGet("ObterPagamentosDetalhados")]
+    public async Task<IActionResult> ObterPagamentosDetalhados()
+    {
+        var pagamentos = await _pagamentoService.ObterPagamentosDetalhados();
+
+        var pagamentosDto = _mapper.Map<List<PagamentoDetalhadoDto>>(pagamentos);
+
+        return Ok(pagamentosDto);
+    }
+
 }
