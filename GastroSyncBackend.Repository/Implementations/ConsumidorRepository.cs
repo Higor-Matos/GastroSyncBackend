@@ -63,6 +63,12 @@ public class ConsumidorRepository : IConsumidorRepository
 
     public async Task<ConsumidorEntity?> ObterConsumidorPorId(int id)
     {
+        if (id <= 0)
+        {
+            Logger.Warn("ID inválido fornecido.");
+            return null;
+        }
+
         try
         {
             var consumidor = await _dbContext.Consumidores!
@@ -70,15 +76,22 @@ public class ConsumidorRepository : IConsumidorRepository
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-            Logger.Info("Consumidor obtido com sucesso.");
+            if (consumidor == null)
+            {
+                Logger.Warn($"Nenhum consumidor encontrado para o ID: {id}");
+            }
+            else
+            {
+                Logger.Info($"Consumidor com ID: {id} obtido com sucesso.");
+            }
 
             return consumidor;
         }
         catch (Exception ex)
         {
-            Logger.Error(ex, "Erro ao obter o consumidor por ID.");
-
-            return null;
+            Logger.Error(ex, $"Erro ao obter o consumidor com ID: {id}.");
+            throw; 
         }
     }
+
 }

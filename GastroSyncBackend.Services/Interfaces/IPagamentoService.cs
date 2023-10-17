@@ -2,6 +2,7 @@
 using GastroSyncBackend.Domain.Response;
 
 namespace GastroSyncBackend.Services.Interfaces;
+
 [AutoDI]
 public interface IPagamentoService
 {
