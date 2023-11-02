@@ -14,7 +14,7 @@ services:
         - "8080:80"
         - "8443:443"
     networks:
-      - gastrosyncbackend_elk_network
+      - gastrosync_elk_network
     depends_on:
       elasticsearch:
           condition: service_healthy
@@ -36,7 +36,7 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     networks:
-      - gastrosyncbackend_elk_network
+      - gastrosync_elk_network
     healthcheck:
       test: ["CMD-SHELL", "curl -sSL http://localhost:9200/_cluster/health?pretty || exit 1"]
       interval: 30s
@@ -57,7 +57,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - gastrosyncbackend_elk_network
+      - gastrosync_elk_network
     healthcheck:
       test: ["CMD-SHELL", "curl -sSL http://localhost:5601 || exit 1"]
       interval: 30s
@@ -71,7 +71,7 @@ services:
     ports:
       - 1433:1433
     networks:
-      - gastrosyncbackend_elk_network
+      - gastrosync_elk_network
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=MyPass@word
@@ -91,4 +91,4 @@ volumes:
     driver: local
 
 networks:
-  gastrosyncbackend_elk_network:
+  gastrosync_elk_network:
