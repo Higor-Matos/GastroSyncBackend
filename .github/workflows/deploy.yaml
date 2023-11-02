@@ -1,19 +1,15 @@
 name: Deploy to ECR
 
 on:
- 
   push:
     branches: [ master ]
 
 jobs:
-  
   build:
-    
-    name: Build Image
+    name: Build and Push Images
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Check out code
       uses: actions/checkout@v3
     
@@ -28,11 +24,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: gastrosyncbackend
-        IMAGE_TAG: gastrosyncbackend
+    - name: Build, tag, and push images to Amazon ECR
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker-compose build
+        docker-compose push
