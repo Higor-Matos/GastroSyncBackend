@@ -24,14 +24,15 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2.0.1
     
-    - name: Build, tag, and push images to Amazon ECR
+        - name: Build, tag, and push images to Amazon ECR
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: public.ecr.aws/o3f5f0c7
         IMAGE_TAG: latest
       run: |
         docker-compose build
-        docker images --format '{{.Repository}} {{.Tag}}' | grep -E 'gastrosyncbackendpresentation|elasticsearch-gastrosyncbackend|kibana-gastrosyncbackend|sqlserver-gastrosyncbackend' | xargs -n 2 sh -c 'docker tag $0:$1 $ECR_REGISTRY/$0:latest && docker push $ECR_REGISTRY/$0:latest'
-    
+        docker images --format '{{.Repository}}:{{.Tag}}' | grep -E 'gastrosyncbackendpresentation|elasticsearch-gastrosyncbackend|kibana-gastrosyncbackend|sqlserver-gastrosyncbackend' | xargs -I {} docker tag {} $ECR_REGISTRY/{}:$IMAGE_TAG
+        docker images --format '{{.Repository}}:{{.Tag}}' | grep -E 'gastrosyncbackendpresentation|elasticsearch-gastrosyncbackend|kibana-gastrosyncbackend|sqlserver-gastrosyncbackend' | xargs -I {} docker push $ECR_REGISTRY/{}:$IMAGE_TAG
+
     - name: Set output
       id: some_step
       run: |
