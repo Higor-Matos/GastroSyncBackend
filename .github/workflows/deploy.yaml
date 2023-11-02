@@ -30,8 +30,8 @@ jobs:
         IMAGE_TAG: latest
       run: |
         docker-compose build
-        docker images --format '{{.Repository}}:{{.Tag}}' | grep -E 'gastrosyncbackendpresentation|elasticsearch-gastrosyncbackend|kibana-gastrosyncbackend|sqlserver-gastrosyncbackend' | xargs -I {} docker tag {} $ECR_REGISTRY/{}:$IMAGE_TAG
-        docker images --format '{{.Repository}}:{{.Tag}}' | grep -E 'gastrosyncbackendpresentation|elasticsearch-gastrosyncbackend|kibana-gastrosyncbackend|sqlserver-gastrosyncbackend' | xargs -I {} docker push $ECR_REGISTRY/{}:$IMAGE_TAG
+        docker images --format '{{.Repository}}:{{.Tag}}' | grep gastrosyncbackendpresentation | xargs -I {} docker tag {} $ECR_REGISTRY/{}:$IMAGE_TAG
+        docker images --format '{{.Repository}}:{{.Tag}}' | grep gastrosyncbackendpresentation | xargs -I {} docker push $ECR_REGISTRY/{}:$IMAGE_TAG
 
     - name: Set output
       id: some_step
