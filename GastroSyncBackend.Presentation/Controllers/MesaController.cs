@@ -78,11 +78,11 @@ public class MesaController : ControllerBase
     }
 
     [HttpPost("CriarMesa")]
-    public async Task<IActionResult> CriarMesa([FromBody] MesaCreateRequest request)
+    public async Task<IActionResult> CriarMesa([FromQuery] int numeromesa, [FromQuery] string local)
     {
         try
         {
-            var result = await _mesaService.CriarMesa(request.NumeroMesa, request.Local!);
+            var result = await _mesaService.CriarMesa(numeromesa, local);
             _logger.Info("Método CriarMesa executado com sucesso.");
             return this.ApiResponse(result.Success, result.Message, result.Data);
         }
@@ -92,4 +92,6 @@ public class MesaController : ControllerBase
             return this.ApiResponse<MesaEntity>(false, "Operação concluída", null);
         }
     }
+
+
 }
