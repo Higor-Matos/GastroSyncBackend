@@ -102,4 +102,5 @@ public class MesaService : IMesaService
             return new ServiceResponse<MesaEntity>(false, "Ocorreu um erro ao obter a mesa por número.");
         }
     }
+
 }

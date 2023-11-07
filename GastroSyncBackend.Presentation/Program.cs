@@ -61,6 +61,16 @@ void ConfigureApp(WebApplicationBuilder builder)
                 sqlOptions.EnableRetryOnFailure();
             }));
 
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("MyAllowSpecificOrigins",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+    });
 
     // Classe de resolução de dependências
     var result = builder.Services.AddServicesWithAutoDi();
@@ -74,7 +84,6 @@ void ConfigureApp(WebApplicationBuilder builder)
         logger.Error("Ocorreu um problema durante o carregamento dos assemblies.");
     }
 }
-
 
 async Task InitializeAndMigrateDatabase(IHost app)
 {
@@ -99,8 +108,9 @@ void ConfigureAppMiddleware(WebApplication app)
         ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
     });
 
+    app.UseCors("MyAllowSpecificOrigins");
+
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
 }
-
