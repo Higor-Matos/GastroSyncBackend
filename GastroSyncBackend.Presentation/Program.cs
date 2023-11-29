@@ -20,10 +20,9 @@ try
 
     logger.Info("Banco de dados verificado com sucesso.");
 
-    if (app.Environment.IsDevelopment())
-    {
-        EnableSwagger(app);
-    }
+
+    EnableSwagger(app);
+    
 
     ConfigureAppMiddleware(app);
 
@@ -97,12 +96,12 @@ async Task InitializeAndMigrateDatabase(IHost app)
 
 void EnableSwagger(IApplicationBuilder app)
 {
+    app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "GastroSync V.6");
-        c.RoutePrefix = "swagger";
+        c.RoutePrefix = string.Empty;
     });
-    app.UseSwaggerUI();
     logger.Info("Swagger habilitado no ambiente de desenvolvimento.");
 }
 

@@ -20,3 +20,25 @@
 2023-11-29 14:45:50.6926 Info Validating config: TargetNames=elastic, allfile, allconsole, ConfigItems=47, FilePath=/app/bin/Debug/net6.0/NLog.config
 2023-11-29 14:45:50.9843 Info Configuration initialized.
 2023-11-29 14:45:57.1721 Info Validating config: TargetNames=elastic, allfile, allconsole, ConfigItems=47, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-11-29 15:00:48.6361 Info Loading assembly name: NLog.Web.AspNetCore
+2023-11-29 15:00:48.7854 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.3.940. Product version: 5.3.3+6abd01e8cac4db3d2fcdb282bb94b056bd8ff2de. GlobalAssemblyCache: False
+2023-11-29 15:00:48.8725 Info Loading assembly name: NLog.Targets.ElasticSearch
+2023-11-29 15:00:48.9138 Info NLog.Targets.ElasticSearch, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3eb62cd298662c6a. File version: 1.0.0.0. Product version: 1.0.0+2fb9a27ff48217059d2b3648bb2a79b6b0af9922. GlobalAssemblyCache: False
+2023-11-29 15:00:49.1677 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-11-29 15:00:49.1785 Info Registered target NLog.Targets.ConsoleTarget(Name=allconsole)
+2023-11-29 15:00:49.2950 Info Registered target NLog.Targets.ElasticSearch.ElasticSearchTarget(Name=elastic)
+2023-11-29 15:00:49.3526 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2023-11-29 15:00:49.4245 Info Validating config: TargetNames=elastic, allfile, allconsole, ConfigItems=47, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-11-29 15:00:49.6243 Info Configuration initialized.
+2023-11-29 15:00:55.0637 Info Validating config: TargetNames=elastic, allfile, allconsole, ConfigItems=47, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-11-29 15:09:24.7156 Info Loading assembly name: NLog.Web.AspNetCore
+2023-11-29 15:09:24.8286 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.3.940. Product version: 5.3.3+6abd01e8cac4db3d2fcdb282bb94b056bd8ff2de. GlobalAssemblyCache: False
+2023-11-29 15:09:24.9103 Info Loading assembly name: NLog.Targets.ElasticSearch
+2023-11-29 15:09:24.9402 Info NLog.Targets.ElasticSearch, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3eb62cd298662c6a. File version: 1.0.0.0. Product version: 1.0.0+2fb9a27ff48217059d2b3648bb2a79b6b0af9922. GlobalAssemblyCache: False
+2023-11-29 15:09:25.1245 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2023-11-29 15:09:25.1313 Info Registered target NLog.Targets.ConsoleTarget(Name=allconsole)
+2023-11-29 15:09:25.2736 Info Registered target NLog.Targets.ElasticSearch.ElasticSearchTarget(Name=elastic)
+2023-11-29 15:09:25.3135 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2023-11-29 15:09:25.3725 Info Validating config: TargetNames=elastic, allfile, allconsole, ConfigItems=47, FilePath=/app/bin/Debug/net6.0/NLog.config
+2023-11-29 15:09:25.5625 Info Configuration initialized.
+2023-11-29 15:09:32.8745 Info Validating config: TargetNames=elastic, allfile, allconsole, ConfigItems=47, FilePath=/app/bin/Debug/net6.0/NLog.config
