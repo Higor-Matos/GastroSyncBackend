@@ -97,7 +97,11 @@ async Task InitializeAndMigrateDatabase(IHost app)
 
 void EnableSwagger(IApplicationBuilder app)
 {
-    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "GastroSync V.6");
+        c.RoutePrefix = "swagger";
+    });
     app.UseSwaggerUI();
     logger.Info("Swagger habilitado no ambiente de desenvolvimento.");
 }
