@@ -83,6 +83,7 @@ void ConfigureApp(WebApplicationBuilder builder)
     {
         logger.Error("Ocorreu um problema durante o carregamento dos assemblies.");
     }
+
 }
 
 async Task InitializeAndMigrateDatabase(IHost app)
@@ -110,7 +111,6 @@ void ConfigureAppMiddleware(WebApplication app)
 
     app.UseCors("MyAllowSpecificOrigins");
 
-    app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
 }
