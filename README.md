@@ -5,7 +5,6 @@
 </p>
 
 [Premiado como melhor projeto na feira de projetos da UNIPAM em 2023](https://youtu.be/3Smsd7WIpfQ)
-[Frontend]([https://youtu.be/3Smsd7WIpfQ](https://github.com/Higor-Matos/GastroSyncFrontend))
 
 ## Introdução
 
@@ -14,7 +13,6 @@ Bem-vindo ao GastroSync Backend, a solução de gerenciamento avançada para est
 ## Tecnologias Utilizadas
 
 ![.NET Core](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dot-net&logoColor=white) 
-![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white) 
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white) 
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white) 
 ![GitHub Actions](https://img.shields.io/badge/github-2088FF?style=for-the-badge&logo=github-actions&logoColor=white) 
@@ -83,6 +81,5 @@ Certifique-se de que o Docker esteja instalado em sua máquina antes de prossegu
 ![GitHub Actions](https://i.imgur.com/U8z54yK.png) ![Vercel](https://i.imgur.com/H4pBikz.png)
 Nosso processo de CI/CD é eficiente, utilizando GitHub Actions e Vercel.
 
-
-
+[Acesse o Frontend](https://github.com/Higor-Matos/GastroSyncFrontend)
 
