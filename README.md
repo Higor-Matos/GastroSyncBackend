@@ -4,6 +4,7 @@
   <img src="https://i.imgur.com/9bopGVU.png" alt="GastroSync Logo" width="600">
 </p>
 
+[Premiado como melhor projeto na feira de projetos da UNIPAM em 2023](https://youtu.be/3Smsd7WIpfQ)
 
 ## Introdução
 
@@ -80,5 +81,7 @@ Certifique-se de que o Docker esteja instalado em sua máquina antes de prossegu
 ### GitHub Actions e Vercel
 ![GitHub Actions](https://i.imgur.com/U8z54yK.png) ![Vercel](https://i.imgur.com/H4pBikz.png)
 Nosso processo de CI/CD é eficiente, utilizando GitHub Actions e Vercel.
+
+
 
 
