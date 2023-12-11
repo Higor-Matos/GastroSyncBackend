@@ -5,6 +5,7 @@
 </p>
 
 [Premiado como melhor projeto na feira de projetos da UNIPAM em 2023](https://youtu.be/3Smsd7WIpfQ)
+[Frontend]([https://youtu.be/3Smsd7WIpfQ](https://github.com/Higor-Matos/GastroSyncFrontend))
 
 ## Introdução
 
