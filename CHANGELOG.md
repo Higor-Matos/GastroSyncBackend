@@ -8,3 +8,4 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 ### Segurança
 - (#2) Retira o `.env` e a chave privada do estado atual do repositório e passa as senhas do Compose e do NLog para variáveis de ambiente.
+- Remove a cópia aninhada de chave privada e ignora arquivos `key.pem` em todos os diretórios `certificado/`.
