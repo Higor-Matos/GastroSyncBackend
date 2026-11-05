@@ -958,4 +958,4 @@ FodyWeavers.xsd
 .env
 .env.*
 !.env.example
-certificado/key.pem
+**/certificado/key.pem
